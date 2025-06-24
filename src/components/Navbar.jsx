@@ -41,6 +41,18 @@ const Navbar = () => {
             </Link>
           </>
         )}
+        <Link to="/templates" className="hover:underline">
+          Шаблоны
+        </Link>
+        {isAuth && (
+          <Link
+            to="/templates/create"
+            className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
+          >
+            ➕ Создать шаблон
+          </Link>
+        )}
+
         <button
           onClick={() =>
             i18n.changeLanguage(i18n.language === "ru" ? "en" : "ru")

@@ -7,6 +7,9 @@ import Results from "./pages/Results";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Test from "./components/Test";
+import CreateTemplate from "./pages/CreateTemplate";
+import TemplateView from "./pages/TemplateView";
+import Templates from "./pages/Templates";
 
 function App() {
   return (
@@ -19,6 +22,9 @@ function App() {
           <Route path="results" element={<Results />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="templates/create" element={<CreateTemplate />} />
+          <Route path="/templates/:id" element={<TemplateView />} />
+          <Route path="/templates" element={<Templates />} />
         </Route>
       </Routes>
     </Router>
