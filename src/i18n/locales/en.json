@@ -1,7 +1,11 @@
 {
-  "title": "Employee Survey",
-  "description": "Please fill out your information",
-  "name": "Full Name",
-  "age": "Age",
-  "submit": "Submit"
+  "title": "Survey App",
+  "Hello": "Hello",
+  "Logout": "Logout",
+  "AuthForm": {
+    "Login": "Login",
+    "Register": "Register",
+    "SubmitRegister": "Register",
+    "SubmitLogin": "Login"
+  }
 }
