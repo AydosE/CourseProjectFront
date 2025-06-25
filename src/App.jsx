@@ -10,6 +10,8 @@ import Test from "./components/Test";
 import CreateTemplate from "./pages/CreateTemplate";
 import TemplateView from "./pages/TemplateView";
 import Templates from "./pages/Templates";
+import FillForm from "./pages/FillForm";
+import FormView from "./pages/FormView";
 
 function App() {
   return (
@@ -19,12 +21,15 @@ function App() {
           <Route index element={<Home />} />
           <Route path="test" element={<Test />} />
           <Route path="form" element={<FormPage />} />
+          <Route path="forms/:id" element={<FormView />} />
+
           <Route path="results" element={<Results />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="templates/create" element={<CreateTemplate />} />
           <Route path="/templates/:id" element={<TemplateView />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/:id/fill" element={<FillForm />} />
         </Route>
       </Routes>
     </Router>

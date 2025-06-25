@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import API from "../api/axios";
 
 const TemplateView = () => {
@@ -41,6 +41,12 @@ const TemplateView = () => {
           </li>
         ))}
       </ul>
+      <Link
+        to={`/templates/${template.id}/fill`}
+        className="text-blue-500 hover:underline"
+      >
+        📝 Пройти шаблон
+      </Link>
     </div>
   );
 };
