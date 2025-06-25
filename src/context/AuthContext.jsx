@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const fetchMe = async () => {
     try {
       const res = await API.get("/auth/me");
+
       setUser(res.data);
       i18n.changeLanguage(res.data.preferred_lang || "en");
     } catch (err) {

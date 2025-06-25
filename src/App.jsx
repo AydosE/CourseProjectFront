@@ -12,6 +12,7 @@ import TemplateView from "./pages/TemplateView";
 import Templates from "./pages/Templates";
 import FillForm from "./pages/FillForm";
 import FormView from "./pages/FormView";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/templates/:id" element={<TemplateView />} />
           <Route path="/templates" element={<Templates />} />
           <Route path="/templates/:id/fill" element={<FillForm />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>

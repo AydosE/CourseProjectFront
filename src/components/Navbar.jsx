@@ -24,6 +24,9 @@ const Navbar = () => {
             <span className="hidden sm:inline">
               {t("Hello")}, {user?.username}!
             </span>
+            <Link to="/profile" className="hover:underline">
+              Профиль
+            </Link>
             <button
               onClick={handleLogout}
               className="bg-white text-blue-500 px-3 py-1 rounded"
