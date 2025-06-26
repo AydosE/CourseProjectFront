@@ -13,6 +13,7 @@ import Templates from "./pages/Templates";
 import FillForm from "./pages/FillForm";
 import FormView from "./pages/FormView";
 import Profile from "./pages/Profile";
+import { EditTemplate } from "./pages/EditTemplate";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/templates" element={<Templates />} />
           <Route path="/templates/:id/fill" element={<FillForm />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-template/:id" element={<EditTemplate />} />
         </Route>
       </Routes>
     </Router>
