@@ -63,12 +63,15 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
     setQuestions(reordered);
   };
 
-  const handleRemove = (index) => {
+  const handleRemove = (e, index) => {
+    e.preventDefault();
+    console.log("works");
+
     const updated = [...questions];
     updated.splice(index, 1);
     setQuestions(updated.map((q, i) => ({ ...q, order: i })));
   };
-  const SortableItem = ({ id, index, children }) => {
+  const SortableItem = ({ id, children }) => {
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
 
@@ -77,11 +80,13 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
       transition,
     };
 
-    return (
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-        {children}
-      </div>
-    );
+    return children({
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    });
   };
   return (
     <div className="space-y-4">
@@ -133,25 +138,54 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
           <div className="divide-y border-t mt-4">
             {questions.map((q, i) => (
               <SortableItem key={q.id} id={q.id} index={i}>
-                <div className="flex justify-between items-start py-2">
-                  <div>
-                    <strong>{i + 1}.</strong> {q.text}{" "}
-                    <span className="text-sm text-gray-500">({q.type})</span>
-                    {q.type === "checkbox" && (
-                      <ul className="text-xs mt-1 ml-4 list-disc">
-                        {q.options.map((opt, j) => (
-                          <li key={j}>{opt}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => handleRemove(i)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Удалить
-                  </button>
-                </div>
+                {({
+                  attributes,
+                  listeners,
+                  setNodeRef,
+                  transform,
+                  transition,
+                }) => {
+                  const style = {
+                    transform: CSS.Transform.toString(transform),
+                    transition,
+                  };
+
+                  return (
+                    <div
+                      ref={setNodeRef}
+                      {...attributes}
+                      style={style}
+                      className="flex justify-between items-start py-2"
+                    >
+                      <span
+                        {...listeners}
+                        className="cursor-grab text-xl px-2 select-none"
+                      >
+                        ⠿
+                      </span>
+                      <div className="flex-1">
+                        <strong>{i + 1}.</strong> {q.text}{" "}
+                        <span className="text-sm text-gray-500">
+                          ({q.type})
+                        </span>
+                        {q.type === "checkbox" && (
+                          <ul className="text-xs mt-1 ml-4 list-disc">
+                            {q.options.map((opt, j) => (
+                              <li key={j}>{opt}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => handleRemove(e, i)}
+                        className="text-red-500 hover:underline ml-4"
+                      >
+                        🗑 Удалить
+                      </button>
+                    </div>
+                  );
+                }}
               </SortableItem>
             ))}
           </div>

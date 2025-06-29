@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./i18n/i18n";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
@@ -14,6 +19,10 @@ import FillForm from "./pages/FillForm";
 import FormView from "./pages/FormView";
 import Profile from "./pages/Profile";
 import { EditTemplate } from "./pages/EditTemplate";
+import AdminPanel from "./pages/AdminPanel";
+import Unauthorized from "./pages/Unauthorized";
+import ProtectedRoute from "./components/ProtectedRoute";
+import UserView from "./pages/UserView";
 
 function App() {
   return (
@@ -24,7 +33,6 @@ function App() {
           <Route path="test" element={<Test />} />
           <Route path="form" element={<FormPage />} />
           <Route path="forms/:id" element={<FormView />} />
-
           <Route path="results" element={<Results />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
@@ -34,6 +42,16 @@ function App() {
           <Route path="/templates/:id/fill" element={<FillForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/edit-template/:id" element={<EditTemplate />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/users/:id" element={<UserView />} />
         </Route>
       </Routes>
     </Router>

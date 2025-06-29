@@ -1,10 +1,26 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import API from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 const TemplateView = () => {
   const { id } = useParams();
   const [template, setTemplate] = useState(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const handleDeleteTemplate = async () => {
+    if (!window.confirm("Удалить шаблон?")) return;
+    try {
+      await API.delete(`/templates/${id}`);
+      alert("Шаблон удалён");
+      navigate(
+        user?.role === "admin" ? `/users/${template.userId}` : "/profile"
+      );
+    } catch (err) {
+      console.error("Ошибка удаления шаблона:", err);
+      alert("Не удалось удалить");
+    }
+  };
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -47,6 +63,14 @@ const TemplateView = () => {
       >
         📝 Пройти шаблон
       </Link>
+      {(user?.id === template.userId || user?.role === "admin") && (
+        <button
+          onClick={handleDeleteTemplate}
+          className="text-red-600 hover:underline text-sm mt-4"
+        >
+          🗑 Удалить шаблон
+        </button>
+      )}
     </div>
   );
 };

@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import API from "../api/axios";
+import { useAuth } from "../context/AuthContext";
 
 const FormView = () => {
   const { id } = useParams();
   const [form, setForm] = useState(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const handleDelete = async () => {
+    if (!window.confirm("Удалить этот ответ?")) return;
+    try {
+      await API.delete(`/forms/${form.id}`);
+      alert("Ответ удалён");
+      navigate(user?.role === "admin" ? `/users/${form.userId}` : "/profile");
+    } catch (err) {
+      console.error("Ошибка при удалении формы:", err);
+      alert("Не удалось удалить");
+    }
+  };
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -19,13 +33,16 @@ const FormView = () => {
   }, [id]);
 
   if (!form) return <p className="text-center">Загрузка ответа...</p>;
+  if (form.Template === null) {
+    return <p className="text-center">Ответ на удалённый шаблон</p>;
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-2">{form.Template.title}</h1>
       <p className="text-gray-700 mb-4">{form.Template.description}</p>
       <div className="space-y-4">
-        {form.Answers.map((ans, i) => {
+        {form.Answers?.map((ans, i) => {
           const q = form.Template.Questions.find(
             (q) => q.id === ans.questionId
           );
@@ -50,6 +67,14 @@ const FormView = () => {
           );
         })}
       </div>
+      {(user?.id === form.userId || user?.role === "admin") && (
+        <button
+          onClick={handleDelete}
+          className="text-sm text-red-600 hover:underline mt-4"
+        >
+          🗑 Удалить ответ
+        </button>
+      )}
     </div>
   );
 };

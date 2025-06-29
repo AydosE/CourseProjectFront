@@ -24,9 +24,18 @@ const Navbar = () => {
             <span className="hidden sm:inline">
               {t("Hello")}, {user?.username}!
             </span>
-            <Link to="/profile" className="hover:underline">
-              Профиль
-            </Link>
+            <button className="bg-white text-blue-500 px-3 py-1 rounded">
+              <Link to="/profile" className="hover:underline">
+                Профиль
+              </Link>
+            </button>
+            {user?.role === "admin" && (
+              <button className="bg-white text-blue-500 px-3 py-1 rounded">
+                <Link to="/admin" className="hover:underline">
+                  Админка
+                </Link>
+              </button>
+            )}
             <button
               onClick={handleLogout}
               className="bg-white text-blue-500 px-3 py-1 rounded"
