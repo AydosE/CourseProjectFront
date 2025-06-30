@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
     en: { translation: en },
     ru: { translation: ru },
   },
-  lng: "ru", // Язык по умолчанию
+  lng: "ru",
   fallbackLng: "en",
   interpolation: { escapeValue: false },
 });

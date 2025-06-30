@@ -18,7 +18,7 @@ import Templates from "./pages/Templates";
 import FillForm from "./pages/FillForm";
 import FormView from "./pages/FormView";
 import Profile from "./pages/Profile";
-import { EditTemplate } from "./pages/EditTemplate";
+import EditTemplate from "./pages/EditTemplate";
 import AdminPanel from "./pages/AdminPanel";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./components/ProtectedRoute";

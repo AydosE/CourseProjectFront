@@ -15,31 +15,35 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { v4 as uuidv4 } from "uuid";
+import QuestionItem from "./QuestionItem";
+
 const typeLimits = {
   text: 4,
   textarea: 4,
   number: 4,
   checkbox: 4,
 };
-import { v4 as uuidv4 } from "uuid";
 
-const QuestionBuilder = ({ questions, setQuestions }) => {
+export default function QuestionBuilder({ questions, setQuestions }) {
   const [newQ, setNewQ] = useState({ text: "", type: "text", options: "" });
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const handleAdd = () => {
-    const countByType = questions.filter((q) => q.type === newQ.type).length;
-    if (countByType >= typeLimits[newQ.type]) {
+    const count = questions.filter((q) => q.type === newQ.type).length;
+    if (count >= typeLimits[newQ.type]) {
       alert(`Максимум ${typeLimits[newQ.type]} вопросов типа "${newQ.type}"`);
       return;
     }
 
     const toAdd = {
-      ...newQ,
       id: uuidv4(),
+      text: newQ.text,
+      type: newQ.type,
       options:
         newQ.type === "checkbox"
           ? newQ.options.split(",").map((s) => s.trim())
@@ -50,6 +54,17 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
     setQuestions([...questions, toAdd]);
     setNewQ({ text: "", type: "text", options: "" });
   };
+
+  const handleUpdate = (id, updated) => {
+    setQuestions((prev) => prev.map((q) => (q.id === id ? { ...updated } : q)));
+  };
+
+  const handleRemove = (index) => {
+    setQuestions((prev) =>
+      prev.filter((_, i) => i !== index).map((q, i) => ({ ...q, order: i }))
+    );
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -63,14 +78,6 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
     setQuestions(reordered);
   };
 
-  const handleRemove = (e, index) => {
-    e.preventDefault();
-    console.log("works");
-
-    const updated = [...questions];
-    updated.splice(index, 1);
-    setQuestions(updated.map((q, i) => ({ ...q, order: i })));
-  };
   const SortableItem = ({ id, children }) => {
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({ id });
@@ -80,14 +87,9 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
       transition,
     };
 
-    return children({
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-    });
+    return children({ setNodeRef, attributes, listeners, style });
   };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-2">
@@ -137,55 +139,27 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
         >
           <div className="divide-y border-t mt-4">
             {questions.map((q, i) => (
-              <SortableItem key={q.id} id={q.id} index={i}>
-                {({
-                  attributes,
-                  listeners,
-                  setNodeRef,
-                  transform,
-                  transition,
-                }) => {
-                  const style = {
-                    transform: CSS.Transform.toString(transform),
-                    transition,
-                  };
-
-                  return (
-                    <div
-                      ref={setNodeRef}
-                      {...attributes}
-                      style={style}
-                      className="flex justify-between items-start py-2"
+              <SortableItem key={q.id} id={q.id}>
+                {({ setNodeRef, attributes, listeners, style }) => (
+                  <div
+                    ref={setNodeRef}
+                    {...attributes}
+                    style={style}
+                    className="flex items-start py-2"
+                  >
+                    <span
+                      {...listeners}
+                      className="cursor-grab text-xl px-2 select-none"
                     >
-                      <span
-                        {...listeners}
-                        className="cursor-grab text-xl px-2 select-none"
-                      >
-                        ⠿
-                      </span>
-                      <div className="flex-1">
-                        <strong>{i + 1}.</strong> {q.text}{" "}
-                        <span className="text-sm text-gray-500">
-                          ({q.type})
-                        </span>
-                        {q.type === "checkbox" && (
-                          <ul className="text-xs mt-1 ml-4 list-disc">
-                            {q.options.map((opt, j) => (
-                              <li key={j}>{opt}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={(e) => handleRemove(e, i)}
-                        className="text-red-500 hover:underline ml-4"
-                      >
-                        🗑 Удалить
-                      </button>
-                    </div>
-                  );
-                }}
+                      ⠿
+                    </span>
+                    <QuestionItem
+                      question={q}
+                      onUpdate={handleUpdate}
+                      onRemove={() => handleRemove(i)}
+                    />
+                  </div>
+                )}
               </SortableItem>
             ))}
           </div>
@@ -193,6 +167,4 @@ const QuestionBuilder = ({ questions, setQuestions }) => {
       </DndContext>
     </div>
   );
-};
-
-export default QuestionBuilder;
+}

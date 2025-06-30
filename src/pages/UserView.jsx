@@ -1,5 +1,5 @@
 // /users/:id
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import TemplateCard from "../components/TemplateCard";
@@ -11,11 +11,25 @@ export default function UserView() {
   const [forms, setForms] = useState([]);
 
   useEffect(() => {
-    API.get(`/users/${id}`).then((res) => setUser(res.data));
-    API.get(`/users/${id}/templates`).then((res) => setTemplates(res.data));
-    API.get(`/users/${id}/forms`).then((res) => setForms(res.data));
+    const fetchData = async () => {
+      try {
+        const [userRes, templatesRes, formsRes] = await Promise.all([
+          API.get(`/users/${id}/datas`),
+          API.get(`/users/${id}/templates`),
+          API.get(`/users/${id}/forms`),
+        ]);
+        setUser(userRes.data);
+        setTemplates(templatesRes.data);
+        setForms(formsRes.data);
+      } catch (err) {
+        console.error("Ошибка при загрузке данных:", err);
+        setUser({ notFound: true });
+      }
+    };
+    fetchData();
   }, [id]);
 
+  if (user?.notFound) return <div>❌ Пользователь не найден</div>;
   if (!user) return <div>Загрузка...</div>;
 
   return (
@@ -40,12 +54,12 @@ export default function UserView() {
         <ul className="space-y-2">
           {forms.map((form) => (
             <li key={form.id}>
-              <a
-                href={`/forms/${form.id}`}
+              <Link
+                to={`/forms/${form.id}`}
                 className="text-blue-600 hover:underline text-sm"
               >
-                📄 Ответ на: {form.Template?.title || "Шаблон"}
-              </a>
+                📄 Ответ на: {form.Template?.title || "Удаленный шаблон"}
+              </Link>
             </li>
           ))}
         </ul>
