@@ -1,8 +1,9 @@
-// /users/:id
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import TemplateCard from "../components/TemplateCard";
+import SectionCard from "@/components/SelectionCard";
+import FormCard from "@/components/FormCard";
 
 export default function UserView() {
   const { id } = useParams();
@@ -29,41 +30,41 @@ export default function UserView() {
     fetchData();
   }, [id]);
 
-  if (user?.notFound) return <div>❌ Пользователь не найден</div>;
-  if (!user) return <div>Загрузка...</div>;
+  if (user?.notFound)
+    return <div className="text-center mt-10">❌ Пользователь не найден</div>;
+  if (!user) return <div className="text-center mt-10">Загрузка...</div>;
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">👤 {user.username}</h1>
+    <div className="p-4 max-w-4xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">👤 {user.username}</h1>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">📁 Шаблоны</h2>
-      {templates.length === 0 ? (
-        <p className="text-gray-500">Нет шаблонов</p>
-      ) : (
-        <div className="grid md:grid-cols-2 gap-4">
-          {templates.map((tpl) => (
-            <TemplateCard key={tpl.id} template={tpl} />
-          ))}
-        </div>
-      )}
+      <SectionCard title="📁 Шаблоны">
+        {templates.length === 0 ? (
+          <p className="text-muted-foreground">Нет шаблонов</p>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-4">
+            {templates.map((tpl) => (
+              <TemplateCard key={tpl.id} template={tpl} />
+            ))}
+          </div>
+        )}
+      </SectionCard>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">📝 Ответы</h2>
-      {forms.length === 0 ? (
-        <p className="text-gray-500">Нет форм</p>
-      ) : (
-        <ul className="space-y-2">
-          {forms.map((form) => (
-            <li key={form.id}>
-              <Link
-                to={`/forms/${form.id}`}
-                className="text-blue-600 hover:underline text-sm"
-              >
-                📄 Ответ на: {form.Template?.title || "Удаленный шаблон"}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <SectionCard title="📝 Ответы">
+        {forms.length === 0 ? (
+          <EmptyState
+            icon="🗒️"
+            title="Нет форм"
+            message="Пользователь ещё не отправлял ответы."
+          />
+        ) : (
+          <div className="space-y-2">
+            {forms.map((form) => (
+              <FormCard key={form.id} form={form} />
+            ))}
+          </div>
+        )}
+      </SectionCard>
     </div>
   );
 }

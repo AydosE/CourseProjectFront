@@ -1,21 +1,28 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import API from "../api/axios";
 import TemplateForm from "../components/TemplateForm";
+import SectionCard from "@/components/SelectionCard";
 
-const CreateTemplate = () => {
+export default function CreateTemplate() {
   const navigate = useNavigate();
 
   const handleSubmit = async (data) => {
     try {
       const res = await API.post("/templates", data);
+      toast.success("Шаблон успешно создан");
       navigate(`/templates/${res.data.templateId}`);
     } catch (err) {
-      console.error(err);
-      alert("Ошибка при создании шаблона");
+      console.error("Ошибка при создании шаблона:", err);
+      toast.error("Не удалось создать шаблон. Попробуйте позже.");
     }
   };
 
-  return <TemplateForm mode="create" onSubmit={handleSubmit} />;
-};
-
-export default CreateTemplate;
+  return (
+    <div className="max-w-3xl mx-auto p-6">
+      <SectionCard title="🧩 Новый шаблон">
+        <TemplateForm mode="create" onSubmit={handleSubmit} />
+      </SectionCard>
+    </div>
+  );
+}

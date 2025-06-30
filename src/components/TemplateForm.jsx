@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import QuestionBuilder from "./QuestionBuilder";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function TemplateForm({
   mode = "create",
@@ -34,9 +38,7 @@ export default function TemplateForm({
   };
 
   const normalizeTags = (raw) => {
-    const str = Array.isArray(raw) ? raw.join(",") : raw;
-
-    const rawTags = str
+    const rawTags = String(raw)
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
@@ -45,11 +47,11 @@ export default function TemplateForm({
     const invalidTags = rawTags.filter((t) => !validTags.includes(t));
 
     if (raw && validTags.length === 0) {
-      alert("Ни один тег не прошёл проверку. Допустимы только буквы и цифры.");
+      toast.error("Ни один тег не прошёл проверку");
     }
 
     if (invalidTags.length > 0) {
-      alert(`Некорректные теги: ${invalidTags.join(", ")}`);
+      toast.error(`Некорректные теги: ${invalidTags.join(", ")}`);
     }
 
     return validTags;
@@ -58,16 +60,24 @@ export default function TemplateForm({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.title.trim()) return alert("Название обязательно");
-    if (questions.length === 0) return alert("Добавьте хотя бы один вопрос");
+    if (!form.title.trim()) {
+      toast.error("Название обязательно");
+      return;
+    }
+
+    if (questions.length === 0) {
+      toast.error("Добавьте хотя бы один вопрос");
+      return;
+    }
 
     const hasEmpty = questions.some((q) => !q.text.trim());
-    if (hasEmpty) return alert("Все вопросы должны быть заполнены");
+    if (hasEmpty) {
+      toast.error("Все вопросы должны быть заполнены");
+      return;
+    }
 
     const tags = normalizeTags(form.tags);
-    if (form.tags && tags.length === 0) {
-      return alert("Допустимы только теги из букв и цифр без пробелов");
-    }
+    if (form.tags && tags.length === 0) return;
 
     const payload = {
       ...form,
@@ -79,55 +89,59 @@ export default function TemplateForm({
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">
+    <div className="max-w-3xl mx-auto p-6 bg-background rounded-md shadow">
+      <h1 className="text-2xl font-bold mb-6">
         {mode === "edit" ? "Редактирование шаблона" : "Создание шаблона"}
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Название"
-          required
-          className="w-full border px-3 py-2 rounded"
-        />
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          placeholder="Описание"
-          className="w-full border px-3 py-2 rounded"
-        />
-        <input
-          name="category"
-          value={form.category}
-          onChange={handleChange}
-          placeholder="Категория"
-          className="w-full border px-3 py-2 rounded"
-        />
-        <input
-          name="imageUrl"
-          value={form.imageUrl}
-          onChange={handleChange}
-          placeholder="Изображение (URL)"
-          className="w-full border px-3 py-2 rounded"
-        />
-        <input
-          name="tags"
-          value={form.tags}
-          onChange={handleChange}
-          placeholder="Теги (через запятую, только буквы и цифры)"
-          className="w-full border px-3 py-2 rounded"
-        />
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">📝 Основная информация</h2>
+          <Input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="Название шаблона"
+            required
+          />
+          <Textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Описание"
+          />
+          <Input
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            placeholder="Категория"
+          />
+          <Input
+            name="imageUrl"
+            value={form.imageUrl}
+            onChange={handleChange}
+            placeholder="Ссылка на изображение"
+          />
+          <Input
+            name="tags"
+            value={form.tags}
+            onChange={handleChange}
+            placeholder="Теги (через запятую, только буквы и цифры)"
+          />
+        </section>
 
         <hr className="my-4" />
-        <QuestionBuilder questions={questions} setQuestions={setQuestions} />
 
-        <button className="bg-blue-600 text-white px-4 py-2 rounded mt-6">
-          {mode === "edit" ? "💾 Сохранить изменения" : "✅ Создать шаблон"}
-        </button>
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">📋 Вопросы</h2>
+          <QuestionBuilder questions={questions} setQuestions={setQuestions} />
+        </section>
+
+        <div className="pt-4">
+          <Button type="submit">
+            {mode === "edit" ? "💾 Сохранить изменения" : "✅ Создать шаблон"}
+          </Button>
+        </div>
       </form>
     </div>
   );

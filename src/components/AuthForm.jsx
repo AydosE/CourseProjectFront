@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-const AuthForm = ({ title, buttonLabel, onSubmit, isLogin }) => {
+export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -13,43 +21,41 @@ const AuthForm = ({ title, buttonLabel, onSubmit, isLogin }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <div className="max-w-md mx-auto bg-background p-6 rounded shadow">
       <h2 className="text-2xl font-bold mb-6 text-center">{title}</h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {!isLogin && (
-          <input
+          <Input
+            ref={inputRef}
             name="username"
             placeholder="Имя пользователя"
             value={form.username}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
             required
           />
         )}
-        <input
+        <Input
+          ref={isLogin ? inputRef : null}
           name="email"
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
           required
         />
-        <input
+        <Input
           name="password"
           type="password"
           placeholder="Пароль"
           value={form.password}
           onChange={handleChange}
-          className="w-full border p-2 rounded"
           required
         />
-        <button className="w-full bg-blue-500 text-white py-2 rounded">
+        <Button type="submit" className="w-full">
           {buttonLabel}
-        </button>
+        </Button>
       </form>
     </div>
   );
-};
-
-export default AuthForm;
+}

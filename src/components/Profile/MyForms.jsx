@@ -1,32 +1,56 @@
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
+import { toast } from "sonner";
 
-const MyForms = () => {
+import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
+import EmptyState from "@/components/ui/EmptyState";
+import FormCard from "@/components/FormCard";
+
+export default function MyForms() {
   const [forms, setForms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    API.get("/users/me/forms").then((res) => setForms(res.data));
+    const fetchForms = async () => {
+      try {
+        const res = await API.get("/users/me/forms");
+        setForms(res.data);
+      } catch (err) {
+        console.error("Ошибка при загрузке форм:", err);
+        toast.error("Не удалось загрузить ответы");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchForms();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="grid md:grid-cols-2 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (forms.length === 0) {
+    return (
+      <EmptyState
+        icon="📬"
+        title="Нет ответов"
+        message="Вы ещё не заполняли ни одной формы."
+      />
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="grid md:grid-cols-2 gap-4">
       {forms.map((form) => (
-        <div key={form.id} className="border p-4 rounded">
-          <h3 className="font-medium text-lg">{form.Template?.title}</h3>
-          <ul className="mt-2 list-disc pl-4 text-sm text-gray-700">
-            {form.Answers.map((a, i) => (
-              <li key={a.id}>
-                Ответ {i + 1}: {a.value}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FormCard key={form.id} form={form} />
       ))}
-      {forms.length === 0 && (
-        <p className="text-gray-500">Вы ещё не заполняли формы.</p>
-      )}
     </div>
   );
-};
-
-export default MyForms;
+}

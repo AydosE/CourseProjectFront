@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { toast } from "sonner";
 import {
   DndContext,
   closestCenter,
@@ -16,6 +17,17 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { v4 as uuidv4 } from "uuid";
+
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+
 import QuestionItem from "./QuestionItem";
 
 const typeLimits = {
@@ -25,8 +37,21 @@ const typeLimits = {
   checkbox: 4,
 };
 
+function SortableItem({ id, children }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return children({ setNodeRef, attributes, listeners, style });
+}
+
 export default function QuestionBuilder({ questions, setQuestions }) {
   const [newQ, setNewQ] = useState({ text: "", type: "text", options: "" });
+  const inputRef = useRef(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -36,7 +61,14 @@ export default function QuestionBuilder({ questions, setQuestions }) {
   const handleAdd = () => {
     const count = questions.filter((q) => q.type === newQ.type).length;
     if (count >= typeLimits[newQ.type]) {
-      alert(`Максимум ${typeLimits[newQ.type]} вопросов типа "${newQ.type}"`);
+      toast.error(
+        `Максимум ${typeLimits[newQ.type]} вопросов типа "${newQ.type}"`
+      );
+      return;
+    }
+
+    if (!newQ.text.trim()) {
+      toast.error("Введите текст вопроса");
       return;
     }
 
@@ -46,13 +78,19 @@ export default function QuestionBuilder({ questions, setQuestions }) {
       type: newQ.type,
       options:
         newQ.type === "checkbox"
-          ? newQ.options.split(",").map((s) => s.trim())
+          ? newQ.options
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
           : [],
       order: questions.length,
     };
 
     setQuestions([...questions, toAdd]);
     setNewQ({ text: "", type: "text", options: "" });
+
+    // Автофокус на поле ввода
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const handleUpdate = (id, updated) => {
@@ -78,55 +116,42 @@ export default function QuestionBuilder({ questions, setQuestions }) {
     setQuestions(reordered);
   };
 
-  const SortableItem = ({ id, children }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-      useSortable({ id });
-
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-    };
-
-    return children({ setNodeRef, attributes, listeners, style });
-  };
-
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-2">
-        <input
+        <Input
+          ref={inputRef}
           placeholder="Текст вопроса"
-          className="flex-1 border px-2 py-1 rounded"
           value={newQ.text}
           onChange={(e) => setNewQ({ ...newQ, text: e.target.value })}
         />
-        <select
-          className="border px-2 py-1 rounded"
+        <Select
           value={newQ.type}
-          onChange={(e) => setNewQ({ ...newQ, type: e.target.value })}
+          onValueChange={(value) => setNewQ({ ...newQ, type: value })}
         >
-          <option value="text">Короткий текст</option>
-          <option value="textarea">Развёрнутый ответ</option>
-          <option value="number">Число</option>
-          <option value="checkbox">Флажки</option>
-        </select>
+          <SelectTrigger>
+            <SelectValue placeholder="Тип" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="text">Короткий текст</SelectItem>
+            <SelectItem value="textarea">Развёрнутый ответ</SelectItem>
+            <SelectItem value="number">Число</SelectItem>
+            <SelectItem value="checkbox">Флажки</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {newQ.type === "checkbox" && (
-        <input
+        <Input
           placeholder="Опции (через запятую)"
-          className="w-full border px-2 py-1 rounded"
           value={newQ.options}
           onChange={(e) => setNewQ({ ...newQ, options: e.target.value })}
         />
       )}
 
-      <button
-        type="button"
-        onClick={handleAdd}
-        className="bg-green-500 text-white px-4 py-1 rounded"
-      >
+      <Button type="button" onClick={handleAdd} className="w-fit">
         ➕ Добавить вопрос
-      </button>
+      </Button>
 
       <DndContext
         sensors={sensors}
@@ -137,7 +162,7 @@ export default function QuestionBuilder({ questions, setQuestions }) {
           items={questions.map((q) => q.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="divide-y border-t mt-4">
+          <div className="mt-6 space-y-3">
             {questions.map((q, i) => (
               <SortableItem key={q.id} id={q.id}>
                 {({ setNodeRef, attributes, listeners, style }) => (
@@ -145,11 +170,11 @@ export default function QuestionBuilder({ questions, setQuestions }) {
                     ref={setNodeRef}
                     {...attributes}
                     style={style}
-                    className="flex items-start py-2"
+                    className="flex items-start gap-2 p-3 rounded-md border bg-background shadow-sm"
                   >
                     <span
                       {...listeners}
-                      className="cursor-grab text-xl px-2 select-none"
+                      className="cursor-grab text-xl px-2 text-muted-foreground select-none"
                     >
                       ⠿
                     </span>

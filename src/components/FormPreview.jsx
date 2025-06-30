@@ -1,28 +1,49 @@
-import React from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
-const FormPreview = ({ template }) => (
-  <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-    <h2 className="text-xl font-bold mb-2">{template.title}</h2>
-    <p className="text-gray-500 mb-4">{template.description}</p>
+export default function FormPreview({ template }) {
+  if (!template || !template.Questions?.length) {
+    return (
+      <p className="text-muted-foreground italic">
+        Нет вопросов для предпросмотра
+      </p>
+    );
+  }
 
-    {template.questions.map((q) => (
-      <div key={q.id} className="mb-4">
-        <label className="block font-medium text-gray-700">{q.text}</label>
-        {q.type === "text" || q.type === "number" ? (
-          <input
-            type={q.type}
-            className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring focus:ring-blue-300"
-          />
-        ) : (
-          <select className="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2">
-            {q.options.map((opt) => (
-              <option key={opt}>{opt}</option>
-            ))}
-          </select>
-        )}
-      </div>
-    ))}
-  </div>
-);
+  return (
+    <div className="space-y-6">
+      {template.Questions.map((q, i) => (
+        <div key={q.id} className="space-y-2">
+          <p className="font-semibold">
+            {i + 1}. {q.text}
+          </p>
 
-export default FormPreview;
+          {q.type === "text" && <Input placeholder="Короткий текст" disabled />}
+
+          {q.type === "textarea" && (
+            <Textarea placeholder="Развёрнутый ответ" disabled />
+          )}
+
+          {q.type === "number" && (
+            <Input type="number" placeholder="Число" disabled />
+          )}
+
+          {q.type === "checkbox" && (
+            <div className="space-y-1 pl-1">
+              {q.options?.map((opt, idx) => (
+                <label
+                  key={idx}
+                  className="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <Checkbox disabled />
+                  {opt}
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

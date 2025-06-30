@@ -1,15 +1,31 @@
 import { useEffect, useState } from "react";
 import API from "../../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const MyTemplates = () => {
+import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
+import EmptyState from "@/components/ui/EmptyState";
+import TemplateCard from "@/components/TemplateCard";
+
+export default function MyTemplates() {
   const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get("/users/me/templates").then((res) => {
-      setTemplates(res.data);
-    });
+    const fetchTemplates = async () => {
+      try {
+        const res = await API.get("/users/me/templates");
+        setTemplates(res.data);
+      } catch (err) {
+        console.error("Ошибка при загрузке:", err);
+        toast.error("Не удалось загрузить шаблоны");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTemplates();
   }, []);
 
   const handleDelete = async (id) => {
@@ -17,49 +33,43 @@ const MyTemplates = () => {
     try {
       await API.delete(`/templates/${id}`);
       setTemplates((prev) => prev.filter((tpl) => tpl.id !== id));
+      toast.success("Шаблон удалён");
     } catch (err) {
-      console.error("Ошибка удаления шаблона:", err);
-      alert("Не удалось удалить шаблон");
+      console.error("Ошибка при удалении:", err);
+      toast.error("Не удалось удалить шаблон");
     }
   };
 
+  if (loading) {
+    return (
+      <div className="grid md:grid-cols-2 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (templates.length === 0) {
+    return (
+      <EmptyState
+        icon="📄"
+        title="Нет шаблонов"
+        message="Вы ещё не создали ни одного шаблона."
+      />
+    );
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="grid md:grid-cols-2 gap-4">
       {templates.map((tpl) => (
-        <div key={tpl.id} className="border p-4 rounded shadow-sm">
-          <div className="flex justify-between items-center">
-            <h2 className="font-semibold text-lg">{tpl.title}</h2>
-            <Link
-              to={`/templates/${tpl.id}`}
-              className="text-blue-600 text-sm hover:underline"
-            >
-              Посмотреть
-            </Link>
-          </div>
-          <p className="text-gray-600 text-sm">{tpl.description}</p>
-
-          <div className="flex gap-4 mt-2 text-sm">
-            <button
-              onClick={() => navigate(`/edit-template/${tpl.id}`)}
-              className="text-blue-500 hover:underline"
-            >
-              ✏️ Редактировать
-            </button>
-            <button
-              onClick={() => handleDelete(tpl.id)}
-              className="text-red-500 hover:underline"
-            >
-              🗑 Удалить
-            </button>
-          </div>
-        </div>
+        <TemplateCard
+          key={tpl.id}
+          template={tpl}
+          onEdit={() => navigate(`/edit-template/${tpl.id}`)}
+          onDelete={() => handleDelete(tpl.id)}
+        />
       ))}
-
-      {templates.length === 0 && (
-        <p className="text-gray-500">У вас пока нет шаблонов.</p>
-      )}
     </div>
   );
-};
-
-export default MyTemplates;
+}

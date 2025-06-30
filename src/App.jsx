@@ -8,7 +8,6 @@ import "./i18n/i18n";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
 import FormPage from "./pages/FormPage";
-import Results from "./pages/Results";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Test from "./components/Test";
@@ -23,38 +22,46 @@ import AdminPanel from "./pages/AdminPanel";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserView from "./pages/UserView";
+import { Toaster } from "sonner";
+import TemplatePreview from "./pages/TemplatePreview";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="test" element={<Test />} />
-          <Route path="form" element={<FormPage />} />
-          <Route path="forms/:id" element={<FormView />} />
-          <Route path="results" element={<Results />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="templates/create" element={<CreateTemplate />} />
-          <Route path="/templates/:id" element={<TemplateView />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/templates/:id/fill" element={<FillForm />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/edit-template/:id" element={<EditTemplate />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute role="admin">
-                <AdminPanel />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/users/:id" element={<UserView />} />
-        </Route>
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="test" element={<Test />} />
+            <Route path="form" element={<FormPage />} />
+            <Route path="forms/:id" element={<FormView />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="templates/create" element={<CreateTemplate />} />
+            <Route path="/templates/:id" element={<TemplateView />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/templates/:id/fill" element={<FillForm />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-template/:id" element={<EditTemplate />} />
+            <Route
+              path="/templates/:id/preview"
+              element={<TemplatePreview />}
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/users/:id" element={<UserView />} />
+          </Route>
+        </Routes>
+      </Router>
+      <Toaster richColors position="top-right" />
+    </>
   );
 }
 

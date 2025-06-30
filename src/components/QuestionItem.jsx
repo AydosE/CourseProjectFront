@@ -1,57 +1,100 @@
-import { useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
-export default function QuestionItem({ question, onUpdate, onRemove }) {
+const QuestionItem = memo(function QuestionItem({
+  question,
+  onUpdate,
+  onRemove,
+}) {
   const [text, setText] = useState(question.text || "");
   const [type, setType] = useState(question.type || "text");
   const [options, setOptions] = useState(question.options?.join(", ") || "");
 
-  const handleCommit = () => {
-    const updated = {
+  // Сохраняем при размонтировании или изменениях вручную
+  useEffect(() => {
+    return () => {
+      commitChanges();
+    };
+  }, []);
+
+  const commitChanges = () => {
+    const normalizedOptions =
+      type === "checkbox"
+        ? options
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [];
+
+    const hasChanged =
+      text !== question.text ||
+      type !== question.type ||
+      JSON.stringify(normalizedOptions) !== JSON.stringify(question.options);
+
+    if (!hasChanged) return;
+
+    onUpdate(question.id, {
       ...question,
       text,
       type,
-      options:
-        type === "checkbox" ? options.split(",").map((s) => s.trim()) : [],
-    };
-    onUpdate(question.id, updated);
+      options: normalizedOptions,
+    });
   };
 
   return (
-    <div className="space-y-1 flex-1">
-      <input
+    <div className="flex flex-col gap-2 p-4 rounded border bg-muted/50">
+      <Input
         value={text}
         onChange={(e) => setText(e.target.value)}
-        onBlur={handleCommit}
-        className="w-full border px-2 py-1 rounded"
+        onBlur={commitChanges}
         placeholder="Вопрос"
       />
-      <select
+
+      <Select
         value={type}
-        onChange={(e) => setType(e.target.value)}
-        onBlur={handleCommit}
-        className="w-full border px-2 py-1 rounded"
+        onValueChange={(value) => {
+          setType(value);
+          commitChanges();
+        }}
       >
-        <option value="text">Короткий текст</option>
-        <option value="textarea">Развёрнутый ответ</option>
-        <option value="number">Число</option>
-        <option value="checkbox">Флажки</option>
-      </select>
+        <SelectTrigger>
+          <SelectValue placeholder="Тип вопроса" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="text">Короткий текст</SelectItem>
+          <SelectItem value="textarea">Развёрнутый ответ</SelectItem>
+          <SelectItem value="number">Число</SelectItem>
+          <SelectItem value="checkbox">Флажки</SelectItem>
+        </SelectContent>
+      </Select>
+
       {type === "checkbox" && (
-        <input
+        <Input
           value={options}
           onChange={(e) => setOptions(e.target.value)}
-          onBlur={handleCommit}
+          onBlur={commitChanges}
           placeholder="Опции (через запятую)"
-          className="w-full border px-2 py-1 rounded"
         />
       )}
-      <button
+
+      <Button
         type="button"
+        variant="destructive"
+        className="self-start text-sm"
         onClick={onRemove}
-        className="text-red-500 hover:underline"
       >
         🗑 Удалить
-      </button>
+      </Button>
     </div>
   );
-}
+});
+
+export default QuestionItem;

@@ -2,25 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
-const FormView = () => {
+import { Button } from "@/components/ui/button";
+import AnswerCard from "@/components/AnswerCard";
+import SectionCard from "@/components/SelectionCard";
+import EmptyState from "@/components/ui/EmptyState";
+import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
+
+export default function FormView() {
   const { id } = useParams();
   const [form, setForm] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-
-  const handleDelete = async () => {
-    if (!window.confirm("Удалить этот ответ?")) return;
-    try {
-      await API.delete(`/forms/${form.id}`);
-      alert("Ответ удалён");
-      navigate(user?.role === "admin" ? `/users/${form.userId}` : "/profile");
-    } catch (err) {
-      console.error("Ошибка при удалении формы:", err);
-      alert("Не удалось удалить");
-    }
-  };
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -28,65 +23,84 @@ const FormView = () => {
         const res = await API.get(`/forms/${id}`);
         setForm(res.data);
       } catch (err) {
-        console.error("Ошибка при загрузке формы", err);
+        console.error("Ошибка при загрузке формы:", err);
+        toast.error("Не удалось загрузить форму");
+      } finally {
+        setLoading(false);
       }
     };
     fetchForm();
   }, [id]);
 
-  if (!form) return <p className="text-center">Загрузка ответа...</p>;
+  const handleDelete = async () => {
+    if (!window.confirm("Удалить этот ответ?")) return;
+    try {
+      await API.delete(`/forms/${form.id}`);
+      toast.success("Ответ удалён");
+      navigate(user?.role === "admin" ? `/users/${form.userId}` : "/profile");
+    } catch (err) {
+      console.error("Ошибка при удалении формы:", err);
+      toast.error("Не удалось удалить ответ");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-2xl mx-auto p-6 space-y-4">
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    );
+  }
+
+  if (!form) {
+    return (
+      <EmptyState title="Ошибка" message="Ответ не найден или недоступен" />
+    );
+  }
 
   const isTemplateDeleted = form.Template === null;
+  const hasAnswers = form.Answers?.length > 0;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-2">
-        {isTemplateDeleted
-          ? "🗑 Ответ на удалённый шаблон"
-          : form.Template.title}
-      </h1>
-      {!isTemplateDeleted && (
-        <p className="text-gray-700 mb-4">{form.Template.description}</p>
-      )}
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <SectionCard
+        title={isTemplateDeleted ? "🗑 Ответ без шаблона" : "📄 Ответ"}
+      >
+        <h2 className="text-xl font-bold">
+          {isTemplateDeleted ? "Шаблон был удалён" : form.Template.title}
+        </h2>
+        {!isTemplateDeleted && form.Template.description && (
+          <p className="text-muted-foreground mb-2">
+            {form.Template.description}
+          </p>
+        )}
+      </SectionCard>
 
-      <div className="space-y-4">
-        {form.Answers?.map((ans, i) => {
-          const q = form.Template?.Questions?.find(
-            (q) => q.id === ans.questionId
-          );
-
-          const value = (() => {
-            if (q?.type === "checkbox") {
-              try {
-                return JSON.parse(ans.value).join(", ");
-              } catch {
-                return ans.value;
-              }
-            }
-            return ans.value;
-          })();
-
-          return (
-            <div key={ans.id} className="border p-3 rounded">
-              <p className="font-semibold">
-                {i + 1}. {q?.text || ans.Question.text || "Удалённый вопрос"}
-              </p>
-              <p className="text-sm text-gray-700 mt-1">Ответ: {value}</p>
-            </div>
-          );
-        })}
-      </div>
+      <SectionCard title="📝 Ответы на вопросы">
+        {hasAnswers ? (
+          form.Answers.map((ans, i) => {
+            const q = form.Template?.Questions?.find(
+              (q) => q.id === ans.questionId
+            );
+            return (
+              <AnswerCard key={ans.id} index={i} question={q} answer={ans} />
+            );
+          })
+        ) : (
+          <EmptyState
+            icon="📭"
+            title="Нет данных"
+            message="Ответов на вопросы не найдено"
+          />
+        )}
+      </SectionCard>
 
       {(user?.id === form.userId || user?.role === "admin") && (
-        <button
-          onClick={handleDelete}
-          className="text-sm text-red-600 hover:underline mt-4"
-        >
+        <Button type="button" variant="destructive" onClick={handleDelete}>
           🗑 Удалить ответ
-        </button>
+        </Button>
       )}
     </div>
   );
-};
-
-export default FormView;
+}
