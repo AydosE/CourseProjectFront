@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://courseprojectback.onrender.com",
+  baseURL: "https://courseprojectback.onrender.com/api",
 });
 
 // При наличии токена — подставляем его в заголовки
