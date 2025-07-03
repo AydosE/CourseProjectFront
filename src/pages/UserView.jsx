@@ -34,19 +34,23 @@ export default function UserView() {
   }, [id]);
 
   if (user?.notFound)
-    return <div className="text-center mt-10">❌ {t("not_found")}</div>;
+    return <div className="text-center mt-10">{t("not_found")}</div>;
 
   if (!user) return <div className="text-center mt-10">{t("loading")}</div>;
 
   return (
-    <div className="p-4 max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">👤 {user.username}</h1>
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
+        {user.username}
+      </h1>
 
       <SectionCard title={t("templates_section")}>
         {templates.length === 0 ? (
-          <p className="text-muted-foreground">{t("no_templates")}</p>
+          <p className="text-muted-foreground dark:text-gray-400">
+            {t("no_templates")}
+          </p>
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {templates.map((tpl) => (
               <TemplateCard key={tpl.id} template={tpl} />
             ))}
@@ -62,13 +66,13 @@ export default function UserView() {
             message={t("no_forms_message")}
           />
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {forms.map((form) => (
               <FormCard key={form.id} form={form} />
             ))}
           </div>
         )}
       </SectionCard>
-    </div>
+    </section>
   );
 }

@@ -23,8 +23,10 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-background p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-6 text-center">{title}</h2>
+    <div className="max-w-md mx-auto px-4 sm:px-6 py-6 bg-background dark:bg-neutral-900 rounded-lg shadow space-y-6">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center text-foreground dark:text-white">
+        {title}
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {!isLogin && (
@@ -35,6 +37,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
             value={form.username}
             onChange={handleChange}
             required
+            className="w-full"
           />
         )}
         <Input
@@ -45,6 +48,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
           value={form.email}
           onChange={handleChange}
           required
+          className="w-full"
         />
         <Input
           name="password"
@@ -53,6 +57,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
           value={form.password}
           onChange={handleChange}
           required
+          className="w-full"
         />
         <Button type="submit" className="w-full">
           {buttonLabel}

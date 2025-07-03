@@ -10,7 +10,6 @@ export default function AdminTemplatesPanel() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [loading, setLoading] = useState(true);
-
   const { t } = useTranslation("Admin");
 
   useEffect(() => {
@@ -24,7 +23,6 @@ export default function AdminTemplatesPanel() {
         setLoading(false);
       }
     };
-
     fetchTemplates();
   }, []);
 
@@ -36,19 +34,23 @@ export default function AdminTemplatesPanel() {
     });
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">{t("template_section_title")}</h2>
+    <section className="space-y-5 px-4 sm:px-6 lg:px-8">
+      <h2 className="text-xl font-semibold text-foreground dark:text-white">
+        {t("template_section_title")}
+      </h2>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input
           placeholder={t("template_search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search templates"
         />
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="border px-2 py-1 rounded text-sm"
+          aria-label="Sort templates"
+          className="border px-3 py-2 rounded text-sm bg-background dark:bg-neutral-800 dark:text-white"
         >
           <option value="createdAt">{t("template_sort_date")}</option>
           <option value="title">{t("template_sort_title")}</option>
@@ -56,9 +58,13 @@ export default function AdminTemplatesPanel() {
       </div>
 
       {loading ? (
-        <p className="text-muted-foreground text-center mt-6">{t("loading")}</p>
+        <p className="text-center text-muted-foreground dark:text-gray-400 mt-6">
+          {t("loading")}
+        </p>
       ) : filtered.length === 0 ? (
-        <p className="text-gray-500 text-center mt-6">{t("template_empty")}</p>
+        <p className="text-center text-muted-foreground dark:text-gray-400 mt-6">
+          {t("template_empty")}
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((tpl) => (
@@ -66,6 +72,6 @@ export default function AdminTemplatesPanel() {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

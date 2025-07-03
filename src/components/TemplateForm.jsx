@@ -91,14 +91,17 @@ export default function TemplateForm({
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-background rounded-md shadow">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="bg-background dark:bg-neutral-900 rounded-lg shadow px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
         {mode === "edit" ? t("edit_title") : t("create_title")}
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("section_info")}</h2>
+        {/* Блок с общей информацией */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground dark:text-white">
+            {t("section_info")}
+          </h2>
           <Input
             name="title"
             value={form.title}
@@ -132,13 +135,17 @@ export default function TemplateForm({
           />
         </section>
 
-        <hr className="my-4" />
+        <hr className="border-muted dark:border-gray-700" />
 
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("section_questions")}</h2>
+        {/* Блок с вопросами */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground dark:text-white">
+            {t("section_questions")}
+          </h2>
           <QuestionBuilder questions={questions} setQuestions={setQuestions} />
         </section>
 
+        {/* Кнопка отправки */}
         <div className="pt-4">
           <Button type="submit">
             {mode === "edit" ? t("button_save") : t("button_create")}

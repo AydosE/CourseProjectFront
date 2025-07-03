@@ -174,11 +174,12 @@ export default function QuestionBuilder({ questions, setQuestions }) {
                     ref={setNodeRef}
                     {...attributes}
                     style={style}
-                    className="flex items-start gap-2 p-3 rounded-md border bg-background shadow-sm"
+                    className="flex items-start gap-2 p-3 rounded-md border bg-background dark:bg-neutral-900 dark:border-gray-700 shadow-sm transition"
                   >
                     <span
                       {...listeners}
-                      className="cursor-grab text-xl px-2 text-muted-foreground select-none"
+                      className="cursor-grab text-xl px-2 text-muted-foreground dark:text-gray-400 select-none"
+                      aria-grabbed="false"
                     >
                       ⠿
                     </span>

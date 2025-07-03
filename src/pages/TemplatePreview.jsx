@@ -30,16 +30,22 @@ export default function TemplatePreview() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       <SectionCard title={t("title")}>
-        <h2 className="text-xl font-bold mb-1">{template.title}</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground dark:text-white mb-1">
+          {template.title}
+        </h2>
+
         {template.description && (
-          <p className="text-muted-foreground mb-4">{template.description}</p>
+          <p className="text-muted-foreground dark:text-gray-400 mb-4">
+            {template.description}
+          </p>
         )}
+
         <FormPreview template={template} />
       </SectionCard>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-3">
         <Link to={`/edit-template/${id}`}>
           <Button variant="outline">✏️ {t("edit_button")}</Button>
         </Link>
@@ -47,6 +53,6 @@ export default function TemplatePreview() {
           <Button variant="secondary">↩️ {t("back_button")}</Button>
         </Link>
       </div>
-    </div>
+    </section>
   );
 }

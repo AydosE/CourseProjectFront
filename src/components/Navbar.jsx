@@ -2,11 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useTheme } from "@/context/ThemeContext"; // если используешь свой ThemeContext
 
 export default function Navbar() {
   const { t } = useTranslation("Navbar");
   const navigate = useNavigate();
   const { user, logout, isAuth } = useAuth();
+  const { theme, toggleTheme } = useTheme(); // нужно добавить ThemeContext
 
   const handleLogout = () => {
     logout();
@@ -14,90 +16,68 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  // const handleLangToggle = () => {
-  //   const next = i18n.language === "ru" ? "en" : "ru";
-  //   i18n.changeLanguage(next);
-  // };
+  const linkStyle =
+    "px-3 py-1 rounded-md border border-border dark:border-gray-700 text-sm font-medium text-foreground dark:text-white hover:bg-muted hover:border-blue-500 dark:hover:border-blue-400 transition";
 
   return (
-    <nav className=" bg-blue-500 text-white p-4 flex flex-wrap justify-between items-center gap-4 sticky top-0">
-      <Link to="/" className="text-xl font-bold whitespace-nowrap">
-        📄 {t("title")}
-      </Link>
-      <div className="flex items-center  flex-wrap gap-3 text-sm">
+    <nav className="bg-background dark:bg-neutral-950 border-b border-border dark:border-gray-800 shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
         <Link
           to="/"
-          className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
+          className="text-xl font-bold whitespace-nowrap text-blue-600 dark:text-blue-400"
         >
-          {t("home")}
+          📄 {t("title")}
         </Link>
-        <Link
-          to="/templates"
-          className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-        >
-          {t("templates")}
-        </Link>
-      </div>
-      <div className=" flex items-center justify-between flex-wrap gap-3 text-sm">
-        <div className="flex items-center justify-self-center flex-wrap gap-3 text-sm">
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Link to="/" className={linkStyle}>
+            {t("home")}
+          </Link>
+          <Link to="/templates" className={linkStyle}>
+            {t("templates")}
+          </Link>
           {isAuth && (
-            <Link
-              to="/templates/create"
-              className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-            >
+            <Link to="/templates/create" className={linkStyle}>
               {t("createTemplate")}
             </Link>
           )}
+        </div>
 
+        <div className="flex flex-wrap items-center gap-2">
           {isAuth ? (
             <>
-              {/* <span className="hidden sm:inline whitespace-nowrap">
-              {t("Hello")}, {user?.username}!
-            </span> */}
-
-              <Link
-                to="/profile"
-                className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-              >
+              <Link to="/profile" className={linkStyle}>
                 {t("profile")}
               </Link>
-
               {user?.role === "admin" && (
-                <Link
-                  to="/admin"
-                  className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-                >
+                <Link to="/admin" className={linkStyle}>
                   {t("admin")}
                 </Link>
               )}
-
               <button
                 onClick={handleLogout}
-                className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-red-100"
+                className={`${linkStyle} hover:bg-red-50 dark:hover:bg-red-900`}
               >
                 {t("logout")}
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-              >
+              <Link to="/login" className={linkStyle}>
                 {t("login")}
               </Link>
-              <Link
-                to="/register"
-                className="bg-white text-blue-500 px-3 py-1 rounded hover:bg-blue-100"
-              >
+              <Link to="/register" className={linkStyle}>
                 {t("register")}
               </Link>
             </>
           )}
-
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher />
-          </div>
+          <LanguageSwitcher />
+          <button
+            onClick={toggleTheme}
+            className="px-2 py-1 border border-border dark:border-gray-700 rounded-md text-sm hover:bg-muted transition"
+          >
+            {theme === "dark" ? "Light" : "Dark"}
+          </button>
         </div>
       </div>
     </nav>

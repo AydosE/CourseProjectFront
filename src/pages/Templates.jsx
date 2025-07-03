@@ -35,7 +35,8 @@ export default function Templates() {
   return (
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">
-        {t("template_section_title")}({tag ? `tag:${tag}` : ""})
+        {t("template_section_title")}
+        {tag ? `(tag:${tag})` : ""}
       </h1>
 
       {loading ? (

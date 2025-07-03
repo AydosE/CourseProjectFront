@@ -15,11 +15,11 @@ export default function AnswerCard({ index, question, answer }) {
   }
 
   return (
-    <div className="border rounded p-4 bg-muted/50">
-      <p className="font-semibold mb-1">
+    <div className="border rounded-lg bg-muted/50 dark:bg-neutral-800 dark:border-gray-700 p-4 space-y-2">
+      <p className="font-medium text-foreground dark:text-white">
         {index + 1}. {text}
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-muted-foreground dark:text-gray-400">
         {t("answer_prefix")}: {value || t("answer_empty")}
       </p>
     </div>

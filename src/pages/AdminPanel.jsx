@@ -78,19 +78,23 @@ export default function AdminPanel() {
     });
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
+        {t("title")}
+      </h1>
 
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input
           placeholder={t("search_placeholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search users"
         />
         <select
-          className="border rounded px-2 py-1 text-sm"
+          className="border px-3 py-2 rounded bg-background text-sm dark:bg-neutral-800 dark:text-white"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
+          aria-label="Sort users"
         >
           <option value="username">{t("sort_name")}</option>
           <option value="role">{t("sort_role")}</option>
@@ -98,70 +102,75 @@ export default function AdminPanel() {
       </div>
 
       {loading ? (
-        <p className="text-center text-muted-foreground mt-10">
+        <p className="text-center text-muted-foreground dark:text-gray-400 mt-10">
           {t("loading")}
         </p>
       ) : filtered.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10">{t("no_users")}</p>
+        <p className="text-center text-muted-foreground dark:text-gray-400 mt-10">
+          {t("no_users")}
+        </p>
       ) : (
-        <table className="w-full table-auto border-collapse text-sm">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">{t("th_name")}</th>
-              <th className="p-2 border">Email</th>
-              <th className="p-2 border">{t("th_role")}</th>
-              <th className="p-2 border">{t("th_status")}</th>
-              <th className="p-2 border">{t("th_actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((u) => (
-              <tr
-                key={u.id}
-                className="text-center hover:bg-gray-50 transition"
-                onClick={() => navigate(`/users/${u.id}`)}
-              >
-                <td className="p-2 border">
-                  <Link
-                    to={`/users/${u.id}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {u.username}
-                  </Link>
-                </td>
-                <td className="p-2 border">{u.email}</td>
-                <td className="p-2 border">{u.role}</td>
-                <td className="p-2 border">
-                  {u.is_blocked ? t("blocked") : t("active")}
-                </td>
-                <td className="p-2 border space-x-2">
-                  <button
-                    onClick={(e) => toggleBlock(u.id, e)}
-                    className="text-yellow-600 hover:underline"
-                  >
-                    {u.is_blocked ? t("unblock") : t("block")}
-                  </button>
-                  <button
-                    onClick={(e) => toggleRole(u.id, e)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {u.role === "admin" ? t("demote") : t("promote")}
-                  </button>
-                  <button
-                    onClick={(e) => removeUser(u.id, e)}
-                    className="text-red-600 hover:underline"
-                  >
-                    {t("delete")}
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm border border-border rounded bg-background dark:bg-neutral-900">
+            <thead>
+              <tr className="bg-muted dark:bg-neutral-800 text-muted-foreground dark:text-gray-300">
+                <th className="p-3 border-b">{t("th_name")}</th>
+                <th className="p-3 border-b">Email</th>
+                <th className="p-3 border-b">{t("th_role")}</th>
+                <th className="p-3 border-b">{t("th_status")}</th>
+                <th className="p-3 border-b">{t("th_actions")}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((u) => (
+                <tr
+                  key={u.id}
+                  className="text-center hover:bg-muted/50 dark:hover:bg-neutral-800 transition cursor-pointer"
+                  onClick={() => navigate(`/users/${u.id}`)}
+                >
+                  <td className="p-3 border-b">
+                    <Link
+                      to={`/users/${u.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {u.username}
+                    </Link>
+                  </td>
+                  <td className="p-3 border-b">{u.email}</td>
+                  <td className="p-3 border-b">{u.role}</td>
+                  <td className="p-3 border-b">
+                    {u.is_blocked ? t("blocked") : t("active")}
+                  </td>
+                  <td className="p-3 border-b space-x-2">
+                    <button
+                      onClick={(e) => toggleBlock(u.id, e)}
+                      className="text-yellow-600 hover:underline transition"
+                    >
+                      {u.is_blocked ? t("unblock") : t("block")}
+                    </button>
+                    <button
+                      onClick={(e) => toggleRole(u.id, e)}
+                      className="text-blue-600 hover:underline transition"
+                    >
+                      {u.role === "admin" ? t("demote") : t("promote")}
+                    </button>
+                    <button
+                      onClick={(e) => removeUser(u.id, e)}
+                      className="text-red-600 hover:underline transition"
+                    >
+                      {t("delete")}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
+
       <div className="space-y-8 mt-10">
         <AdminTemplatesPanel />
       </div>
-    </div>
+    </section>
   );
 }

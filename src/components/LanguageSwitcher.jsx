@@ -13,10 +13,11 @@ export default function LanguageSwitcher() {
     <select
       value={i18n.language}
       onChange={handleLangChange}
-      className="bg-white text-blue-500 px-3 py-1 rounded border"
+      className="px-3 py-1 rounded-md border text-sm bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700 transition"
+      aria-label="Language"
     >
       <option value="en">EN</option>
-      <option value="ru">Ру</option>
+      <option value="ru">RU</option>
     </select>
   );
 }

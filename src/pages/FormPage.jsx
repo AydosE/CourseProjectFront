@@ -27,12 +27,18 @@ export default function FormPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-1">{t(template.title)}</h2>
-        <p className="text-gray-500">{t(template.description)}</p>
+    <section className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-background dark:bg-neutral-900 rounded-lg shadow space-y-6">
+      {/* Header */}
+      <div className="space-y-1">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
+          {t(template.title)}
+        </h2>
+        <p className="text-muted-foreground dark:text-gray-400 text-sm">
+          {t(template.description)}
+        </p>
       </div>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {template.questions.map((q) => (
           <QuestionField key={q.id} question={q} onChange={handleChange} />
@@ -40,13 +46,13 @@ export default function FormPage() {
 
         <button
           disabled={submitting}
-          className={`w-full bg-blue-600 text-white py-2 rounded ${
+          className={`w-full bg-blue-600 text-white py-2 rounded transition ${
             submitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
           }`}
         >
           {submitting ? t("FormPage:submitting") : t("FormPage:submit")}
         </button>
       </form>
-    </div>
+    </section>
   );
 }

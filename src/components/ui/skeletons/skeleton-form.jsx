@@ -1,5 +1,3 @@
-import { Skeleton } from "./skeleton";
-
 export default function SkeletonForm() {
   return (
     <div className="space-y-4">

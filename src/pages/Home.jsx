@@ -39,10 +39,10 @@ export default function Home() {
   }, [t]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-10">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-6 space-y-12">
       <SectionCard title={t("newTemplates.title")}>
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
@@ -54,14 +54,14 @@ export default function Home() {
             message={t("newTemplates.message")}
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {latest.map((tpl) => (
               <Link
                 key={tpl.id}
                 to={`/templates/${tpl.id}`}
-                className="border rounded-lg p-4 bg-background transition hover:shadow"
+                className="border rounded-xl p-4 bg-background dark:bg-neutral-900 transition hover:shadow-sm"
               >
-                <h3 className="font-semibold text-lg mb-1 text-foreground line-clamp-1">
+                <h3 className="font-semibold text-lg mb-2 text-foreground line-clamp-1">
                   {tpl.title}
                 </h3>
                 {tpl.description && (
@@ -86,14 +86,14 @@ export default function Home() {
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border rounded shadow bg-background">
+            <table className="min-w-full text-sm border rounded bg-background dark:bg-neutral-900">
               <thead>
                 <tr className="bg-muted text-muted-foreground">
-                  <th className="text-left px-3 py-2">#</th>
-                  <th className="text-left px-3 py-2">
+                  <th className="text-left px-4 py-2">#</th>
+                  <th className="text-left px-4 py-2">
                     {t("popularTemplates.templates")}
                   </th>
-                  <th className="text-left px-3 py-2">
+                  <th className="text-left px-4 py-2">
                     {t("popularTemplates.passedTimes")}
                   </th>
                 </tr>
@@ -102,19 +102,12 @@ export default function Home() {
                 {top.map((tpl, i) => (
                   <tr
                     key={tpl.id}
-                    className="border-t hover:cursor-pointer hover:bg-muted/50 transition"
+                    className="border-t hover:bg-muted/50 dark:hover:bg-neutral-800 transition"
                     onClick={() => navigate(`/templates/${tpl.id}`)}
                   >
-                    <td className="px-3 py-2">{i + 1}</td>
-                    <td className="px-3 py-2">
-                      {/* <Link
-                        to={`/templates/${tpl.id}`}
-                        className="text-primary hover:underline"
-                      > */}
-                      {tpl.title}
-                      {/* </Link> */}
-                    </td>
-                    <td className="px-3 py-2">{tpl.formCount}</td>
+                    <td className="px-4 py-2">{i + 1}</td>
+                    <td className="px-4 py-2 text-primary">{tpl.title}</td>
+                    <td className="px-4 py-2">{tpl.formCount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -137,7 +130,7 @@ export default function Home() {
             {tags.map((tag) => (
               <button
                 key={tag}
-                className="px-3 py-1 text-sm bg-muted hover:bg-muted/70 text-foreground rounded transition cursor-pointer"
+                className="px-4 py-1 text-sm bg-muted dark:bg-neutral-800 text-foreground rounded-full hover:bg-muted/70 dark:hover:bg-neutral-700 transition"
                 onClick={() =>
                   navigate(`/templates?tag=${encodeURIComponent(tag)}`)
                 }

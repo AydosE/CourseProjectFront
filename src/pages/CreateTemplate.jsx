@@ -21,10 +21,10 @@ export default function CreateTemplate() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <SectionCard title={t("title")}>
         <TemplateForm mode="create" onSubmit={handleSubmit} />
       </SectionCard>
-    </div>
+    </section>
   );
 }

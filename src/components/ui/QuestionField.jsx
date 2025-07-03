@@ -1,24 +1,29 @@
+import { useTranslation } from "react-i18next";
+
 export default function QuestionField({ question, onChange }) {
   const { id, type, text, options = [] } = question;
+  const { t } = useTranslation("QuestionField");
 
   const handle = (e) => onChange(id, e.target.value);
 
   return (
-    <div>
-      <label className="block font-medium text-gray-700 mb-1">{text}</label>
+    <div className="space-y-2">
+      <label className="block font-medium text-foreground dark:text-white">
+        {text}
+      </label>
 
       {type === "text" || type === "number" ? (
         <input
           type={type}
           onChange={handle}
-          className="block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring focus:ring-blue-300"
+          className="w-full px-3 py-2 rounded-md border bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500 transition"
         />
       ) : type === "select" ? (
         <select
           onChange={handle}
-          className="block w-full border-gray-300 rounded-lg shadow-sm p-2"
+          className="w-full px-3 py-2 rounded-md border bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-blue-500 transition"
         >
-          <option value="">Выберите вариант</option>
+          <option value="">{t("select_option")}</option>
           {options.map((opt, i) => (
             <option key={i} value={opt}>
               {opt}
@@ -26,7 +31,7 @@ export default function QuestionField({ question, onChange }) {
           ))}
         </select>
       ) : (
-        <p className="text-red-500">Неизвестный тип вопроса: {type}</p>
+        <p className="text-red-500 text-sm">{t("unknown_type", { type })}</p>
       )}
     </div>
   );

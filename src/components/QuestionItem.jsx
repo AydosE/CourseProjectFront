@@ -47,12 +47,13 @@ const QuestionItem = memo(function QuestionItem({
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4 rounded border bg-muted/50">
+    <div className="flex flex-col gap-3 p-4 rounded-lg border bg-muted/50 dark:bg-neutral-800 dark:border-gray-700 transition">
       <Input
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={commitChanges}
         placeholder={t("question_placeholder")}
+        className="w-full"
       />
 
       <Select
@@ -62,9 +63,13 @@ const QuestionItem = memo(function QuestionItem({
           commitChanges();
         }}
       >
-        <SelectTrigger>
+        <SelectTrigger
+          className="w-full bg-background dark:bg-neutral-900 dark:text-white"
+          aria-label={t("type_placeholder")}
+        >
           <SelectValue placeholder={t("type_placeholder")} />
         </SelectTrigger>
+
         <SelectContent>
           <SelectItem value="text">{t("type_text")}</SelectItem>
           <SelectItem value="textarea">{t("type_textarea")}</SelectItem>

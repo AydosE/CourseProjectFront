@@ -87,25 +87,29 @@ export default function FillForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow space-y-6">
-      <h1 className="text-2xl font-bold">{template.title}</h1>
+    <section className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 bg-background dark:bg-neutral-900 rounded-lg shadow">
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
+        {template.title}
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {template.Questions.map((q) => (
-          <div key={q.id}>
-            <label className="block font-medium mb-1">{q.text}</label>
+          <div key={q.id} className="space-y-2">
+            <label className="block font-medium text-foreground dark:text-white">
+              {q.text}
+            </label>
 
             {q.type === "text" && (
               <input
                 type="text"
-                className="w-full border px-3 py-2 rounded"
+                className="w-full px-3 py-2 rounded border bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700"
                 onChange={(e) => handleChange(q.id, e.target.value)}
               />
             )}
 
             {q.type === "textarea" && (
               <textarea
-                className="w-full border px-3 py-2 rounded"
+                className="w-full px-3 py-2 rounded border bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700"
                 onChange={(e) => handleChange(q.id, e.target.value)}
               />
             )}
@@ -114,7 +118,7 @@ export default function FillForm() {
               <input
                 type="number"
                 min="0"
-                className="w-full border px-3 py-2 rounded"
+                className="w-full px-3 py-2 rounded border bg-background dark:bg-neutral-800 dark:text-white dark:border-gray-700"
                 onChange={(e) => handleChange(q.id, e.target.value)}
               />
             )}
@@ -122,7 +126,10 @@ export default function FillForm() {
             {q.type === "checkbox" && (
               <div className="space-y-1">
                 {q.options.map((opt, i) => (
-                  <label key={i} className="flex items-center gap-2">
+                  <label
+                    key={i}
+                    className="flex items-center gap-2 text-foreground dark:text-white"
+                  >
                     <input
                       type="checkbox"
                       onChange={() => handleCheckbox(q.id, opt)}
@@ -138,13 +145,13 @@ export default function FillForm() {
 
         <button
           disabled={submitting}
-          className={`bg-blue-600 text-white px-4 py-2 rounded ${
+          className={`bg-blue-600 text-white px-4 py-2 rounded transition ${
             submitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
           }`}
         >
           {submitting ? t("submit_loading") : t("submit_button")}
         </button>
       </form>
-    </div>
+    </section>
   );
 }

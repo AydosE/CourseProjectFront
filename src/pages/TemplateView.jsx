@@ -45,23 +45,30 @@ export default function TemplateView() {
     return <p className="text-center text-red-500 mt-10">{t("not_found")}</p>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold mb-2">{template.title}</h1>
-        <p className="text-gray-700">{template.description}</p>
-      </div>
+    <section className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 bg-background dark:bg-neutral-900 rounded-lg shadow">
+      <header>
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white mb-2">
+          {template.title}
+        </h1>
+        <p className="text-muted-foreground dark:text-gray-400">
+          {template.description}
+        </p>
+      </header>
 
-      <ul className="space-y-2">
+      <ul className="space-y-3">
         {template.Questions?.map((q, i) => (
-          <li key={q.id} className="border p-3 rounded">
-            <div className="font-medium">
-              {i + 1}. {q.text}{" "}
-              <span className="text-sm text-gray-500 font-normal">
+          <li
+            key={q.id}
+            className="border rounded-md p-4 bg-muted/50 dark:bg-neutral-800 dark:border-gray-700"
+          >
+            <div className="font-medium text-foreground dark:text-white">
+              {i + 1}. {q.text}
+              <span className="text-sm text-muted-foreground dark:text-gray-400 font-normal ml-2">
                 ({q.type})
               </span>
             </div>
             {q.type === "checkbox" && (
-              <ul className="pl-5 list-disc text-sm text-gray-600 mt-1">
+              <ul className="pl-5 list-disc mt-1 text-sm text-muted-foreground dark:text-gray-400">
                 {q.options.map((opt, idx) => (
                   <li key={idx}>{opt}</li>
                 ))}
@@ -72,7 +79,7 @@ export default function TemplateView() {
       </ul>
 
       {isAuth && (
-        <>
+        <div className="space-y-2">
           <Link
             to={`/templates/${template.id}/fill`}
             className="inline-block text-blue-600 hover:underline"
@@ -81,24 +88,23 @@ export default function TemplateView() {
           </Link>
 
           {(user?.id === template.userId || user?.role === "admin") && (
-            <button
-              onClick={handleDeleteTemplate}
-              className="block text-red-600 hover:underline text-sm mt-4"
-            >
-              {t("delete_button")}
-            </button>
+            <>
+              <button
+                onClick={handleDeleteTemplate}
+                className="block text-red-600 hover:underline text-sm"
+              >
+                {t("delete_button")}
+              </button>
+              <Link
+                to={`/edit-template/${template.id}`}
+                className="block text-green-600 hover:underline text-sm"
+              >
+                {t("edit_button")}
+              </Link>
+            </>
           )}
-
-          {(user?.id === template.userId || user?.role === "admin") && (
-            <Link
-              to={`/edit-template/${template.id}`}
-              className="block text-green-600 hover:underline text-sm mt-2"
-            >
-              {t("edit_button")}
-            </Link>
-          )}
-        </>
+        </div>
       )}
-    </div>
+    </section>
   );
 }
