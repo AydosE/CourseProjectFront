@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../api/axios";
 import { toast } from "sonner";
 import FormSkeleton from "@/components/ui/skeletons/FormSkeleton";
@@ -7,6 +8,7 @@ import FormSkeleton from "@/components/ui/skeletons/FormSkeleton";
 export default function FillForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation("FillForm");
 
   const [template, setTemplate] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -20,14 +22,14 @@ export default function FillForm() {
         setTemplate(res.data);
       } catch (err) {
         console.error("Ошибка загрузки шаблона:", err);
-        toast.error("Не удалось загрузить шаблон");
+        toast.error(t("load_error"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchTemplate();
-  }, [id]);
+  }, [id, t]);
 
   const handleChange = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -45,7 +47,7 @@ export default function FillForm() {
     e.preventDefault();
 
     if (!template?.Questions?.length) {
-      toast.error("Форма повреждена или не содержит вопросов");
+      toast.error(t("template_corrupt"));
       return;
     }
 
@@ -55,7 +57,7 @@ export default function FillForm() {
     }));
 
     if (answerList.length === 0) {
-      toast.error("Вы не ответили ни на один вопрос");
+      toast.error(t("no_answers"));
       return;
     }
 
@@ -67,13 +69,12 @@ export default function FillForm() {
     try {
       setSubmitting(true);
       const res = await API.post("/forms", payload);
-      toast.success("Ответ успешно отправлен");
+      toast.success(t("submit_success"));
       navigate(`/forms/${res.data.formId}`);
     } catch (err) {
       console.error("Ошибка при отправке формы:", err);
-      toast.error(
-        err.response?.data?.message || "Ошибка при отправке. Попробуйте позже."
-      );
+      const message = err.response?.data?.message || t("submit_error");
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -82,7 +83,7 @@ export default function FillForm() {
   if (loading) return <FormSkeleton />;
 
   if (!template) {
-    return <p className="text-center text-red-500 mt-20">Шаблон не найден</p>;
+    return <p className="text-center text-red-500 mt-20">{t("not_found")}</p>;
   }
 
   return (
@@ -141,7 +142,7 @@ export default function FillForm() {
             submitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
           }`}
         >
-          {submitting ? "⏳ Отправка..." : "✅ Отправить"}
+          {submitting ? t("submit_loading") : t("submit_button")}
         </button>
       </form>
     </div>

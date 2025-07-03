@@ -1,0 +1,18 @@
+{
+  "create_title": "Создание шаблона",
+  "edit_title": "Редактирование шаблона",
+  "section_info": "Основная информация",
+  "section_questions": "Вопросы",
+  "placeholder_title": "Название шаблона",
+  "placeholder_description": "Описание",
+  "placeholder_category": "Категория",
+  "placeholder_image": "Ссылка на изображение",
+  "placeholder_tags": "Теги (через запятую, только буквы и цифры)",
+  "button_create": "Создать шаблон",
+  "button_save": "Сохранить изменения",
+  "title_required": "Название обязательно",
+  "questions_required": "Добавьте хотя бы один вопрос",
+  "question_empty_error": "Все вопросы должны быть заполнены",
+  "tags_invalid_all": "Ни один тег не прошёл проверку",
+  "tags_invalid_some": "Некорректные теги: {{tags}}"
+}

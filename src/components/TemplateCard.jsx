@@ -1,8 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function TemplateCard({ template, onEdit, onDelete }) {
+  const navigate = useNavigate();
   return (
-    <div className="border rounded-lg shadow-sm hover:shadow-md bg-background p-4 transition space-y-2">
+    <div
+      className="border rounded-lg shadow-sm hover:shadow-md bg-background p-4 transition space-y-2 cursor-pointer"
+      onClick={() => navigate(`/templates/${template.id}`)}
+    >
       <div className="flex justify-between items-start gap-3">
         <div className="flex-1">
           <Link

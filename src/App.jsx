@@ -4,7 +4,12 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n/i18n";
+
 import "./i18n/i18n";
+
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
 import FormPage from "./pages/FormPage";
@@ -27,7 +32,7 @@ import TemplatePreview from "./pages/TemplatePreview";
 
 function App() {
   return (
-    <>
+    <I18nextProvider i18n={i18n}>
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -38,11 +43,11 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="templates/create" element={<CreateTemplate />} />
-            <Route path="/templates/:id" element={<TemplateView />} />
-            <Route path="/templates" element={<Templates />} />
-            <Route path="/templates/:id/fill" element={<FillForm />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/edit-template/:id" element={<EditTemplate />} />
+            <Route path="templates/:id" element={<TemplateView />} />
+            <Route path="templates" element={<Templates />} />
+            <Route path="templates/:id/fill" element={<FillForm />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="edit-template/:id" element={<EditTemplate />} />
             <Route
               path="/templates/:id/preview"
               element={<TemplatePreview />}
@@ -58,10 +63,11 @@ function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="/users/:id" element={<UserView />} />
           </Route>
+          <Route path="*" element={<h1>Page not found</h1>} />
         </Routes>
       </Router>
       <Toaster richColors position="top-right" />
-    </>
+    </I18nextProvider>
   );
 }
 

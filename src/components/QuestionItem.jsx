@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const QuestionItem = memo(function QuestionItem({
   question,
@@ -17,13 +18,9 @@ const QuestionItem = memo(function QuestionItem({
   const [text, setText] = useState(question.text || "");
   const [type, setType] = useState(question.type || "text");
   const [options, setOptions] = useState(question.options?.join(", ") || "");
+  const { t } = useTranslation("QuestionBuilder");
 
-  // Сохраняем при размонтировании или изменениях вручную
-  useEffect(() => {
-    return () => {
-      commitChanges();
-    };
-  }, []);
+  useEffect(() => () => commitChanges(), []);
 
   const commitChanges = () => {
     const normalizedOptions =
@@ -55,7 +52,7 @@ const QuestionItem = memo(function QuestionItem({
         value={text}
         onChange={(e) => setText(e.target.value)}
         onBlur={commitChanges}
-        placeholder="Вопрос"
+        placeholder={t("question_placeholder")}
       />
 
       <Select
@@ -66,13 +63,13 @@ const QuestionItem = memo(function QuestionItem({
         }}
       >
         <SelectTrigger>
-          <SelectValue placeholder="Тип вопроса" />
+          <SelectValue placeholder={t("type_placeholder")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="text">Короткий текст</SelectItem>
-          <SelectItem value="textarea">Развёрнутый ответ</SelectItem>
-          <SelectItem value="number">Число</SelectItem>
-          <SelectItem value="checkbox">Флажки</SelectItem>
+          <SelectItem value="text">{t("type_text")}</SelectItem>
+          <SelectItem value="textarea">{t("type_textarea")}</SelectItem>
+          <SelectItem value="number">{t("type_number")}</SelectItem>
+          <SelectItem value="checkbox">{t("type_checkbox")}</SelectItem>
         </SelectContent>
       </Select>
 
@@ -81,7 +78,7 @@ const QuestionItem = memo(function QuestionItem({
           value={options}
           onChange={(e) => setOptions(e.target.value)}
           onBlur={commitChanges}
-          placeholder="Опции (через запятую)"
+          placeholder={t("options_placeholder")}
         />
       )}
 
@@ -91,7 +88,7 @@ const QuestionItem = memo(function QuestionItem({
         className="self-start text-sm"
         onClick={onRemove}
       >
-        🗑 Удалить
+        {t("delete_button")}
       </Button>
     </div>
   );

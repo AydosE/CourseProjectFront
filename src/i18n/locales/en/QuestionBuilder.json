@@ -1,0 +1,14 @@
+{
+  "new_placeholder": "Question text",
+  "type_placeholder": "Type",
+  "type_text": "Short text",
+  "type_textarea": "Long answer",
+  "type_number": "Number",
+  "type_checkbox": "Checkboxes",
+  "options_placeholder": "Options (comma-separated)",
+  "add_button": "Add question",
+  "delete_button": "Delete",
+  "question_placeholder": "Question",
+  "empty_error": "Enter a question",
+  "max_type_error": "Maximum of {{max}} questions of type \"{{type}}\""
+}

@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const inputRef = useRef(null);
+  const { t } = useTranslation("AuthForm");
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -29,7 +31,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
           <Input
             ref={inputRef}
             name="username"
-            placeholder="Имя пользователя"
+            placeholder={t("username")}
             value={form.username}
             onChange={handleChange}
             required
@@ -39,7 +41,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
           ref={isLogin ? inputRef : null}
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder={t("email")}
           value={form.email}
           onChange={handleChange}
           required
@@ -47,7 +49,7 @@ export default function AuthForm({ title, buttonLabel, onSubmit, isLogin }) {
         <Input
           name="password"
           type="password"
-          placeholder="Пароль"
+          placeholder={t("password")}
           value={form.password}
           onChange={handleChange}
           required

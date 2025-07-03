@@ -1,0 +1,10 @@
+{
+  "confirm_delete": "Delete template?",
+  "delete_success": "Template deleted",
+  "delete_error": "Failed to delete template",
+  "load_error": "Failed to load template",
+  "not_found": "Template not found",
+  "fill_button": "Fill out template",
+  "delete_button": "Delete template",
+  "edit_button": "Edit template"
+}

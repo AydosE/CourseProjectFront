@@ -5,7 +5,7 @@ import QuestionField from "@/components/ui/QuestionField";
 import { toast } from "sonner";
 
 export default function FormPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("FormPage");
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -19,13 +19,11 @@ export default function FormPage() {
     e.preventDefault();
 
     if (Object.keys(answers).length === 0) {
-      toast.error("Пожалуйста, заполните хотя бы один ответ");
+      toast.error(t("FormPage:fill_required"));
       return;
     }
 
-    // Для мок-примеров можно просто отобразить в консоли
-    console.log("Ответы:", answers);
-    toast.success("Форма отправлена");
+    toast.success(t("FormPage:submitted"));
   };
 
   return (
@@ -46,7 +44,7 @@ export default function FormPage() {
             submitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
           }`}
         >
-          {submitting ? "⏳ Отправка..." : t("submit") || "Отправить"}
+          {submitting ? t("FormPage:submitting") : t("FormPage:submit")}
         </button>
       </form>
     </div>

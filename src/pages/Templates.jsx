@@ -5,10 +5,12 @@ import API from "../api/axios";
 import TemplateCard from "@/components/TemplateCard";
 import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";
+import { useTranslation } from "react-i18next";
 
 export default function Templates() {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("Admin");
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -28,7 +30,7 @@ export default function Templates() {
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">📋 Все шаблоны</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("template_section_title")}</h1>
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

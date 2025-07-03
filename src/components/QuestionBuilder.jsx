@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
 import {
   DndContext,
   closestCenter,
@@ -16,8 +18,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { v4 as uuidv4 } from "uuid";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -27,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-
 import QuestionItem from "./QuestionItem";
 
 const typeLimits = {
@@ -52,23 +51,29 @@ function SortableItem({ id, children }) {
 export default function QuestionBuilder({ questions, setQuestions }) {
   const [newQ, setNewQ] = useState({ text: "", type: "text", options: "" });
   const inputRef = useRef(null);
+  const { t } = useTranslation("QuestionBuilder");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   const handleAdd = () => {
     const count = questions.filter((q) => q.type === newQ.type).length;
     if (count >= typeLimits[newQ.type]) {
       toast.error(
-        `Максимум ${typeLimits[newQ.type]} вопросов типа "${newQ.type}"`
+        t("max_type_error", {
+          max: typeLimits[newQ.type],
+          type: t(`type_${newQ.type}`),
+        })
       );
       return;
     }
 
     if (!newQ.text.trim()) {
-      toast.error("Введите текст вопроса");
+      toast.error(t("empty_error"));
       return;
     }
 
@@ -89,7 +94,6 @@ export default function QuestionBuilder({ questions, setQuestions }) {
     setQuestions([...questions, toAdd]);
     setNewQ({ text: "", type: "text", options: "" });
 
-    // Автофокус на поле ввода
     setTimeout(() => inputRef.current?.focus(), 0);
   };
 
@@ -121,7 +125,7 @@ export default function QuestionBuilder({ questions, setQuestions }) {
       <div className="flex flex-col sm:flex-row gap-2">
         <Input
           ref={inputRef}
-          placeholder="Текст вопроса"
+          placeholder={t("new_placeholder")}
           value={newQ.text}
           onChange={(e) => setNewQ({ ...newQ, text: e.target.value })}
         />
@@ -130,27 +134,27 @@ export default function QuestionBuilder({ questions, setQuestions }) {
           onValueChange={(value) => setNewQ({ ...newQ, type: value })}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Тип" />
+            <SelectValue placeholder={t("type_placeholder")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="text">Короткий текст</SelectItem>
-            <SelectItem value="textarea">Развёрнутый ответ</SelectItem>
-            <SelectItem value="number">Число</SelectItem>
-            <SelectItem value="checkbox">Флажки</SelectItem>
+            <SelectItem value="text">{t("type_text")}</SelectItem>
+            <SelectItem value="textarea">{t("type_textarea")}</SelectItem>
+            <SelectItem value="number">{t("type_number")}</SelectItem>
+            <SelectItem value="checkbox">{t("type_checkbox")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {newQ.type === "checkbox" && (
         <Input
-          placeholder="Опции (через запятую)"
+          placeholder={t("options_placeholder")}
           value={newQ.options}
           onChange={(e) => setNewQ({ ...newQ, options: e.target.value })}
         />
       )}
 
       <Button type="button" onClick={handleAdd} className="w-fit">
-        ➕ Добавить вопрос
+        {t("add_button")}
       </Button>
 
       <DndContext

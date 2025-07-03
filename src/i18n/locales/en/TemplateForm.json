@@ -1,0 +1,18 @@
+{
+  "create_title": "Create Template",
+  "edit_title": "Edit Template",
+  "section_info": "Basic Information",
+  "section_questions": "Questions",
+  "placeholder_title": "Template title",
+  "placeholder_description": "Description",
+  "placeholder_category": "Category",
+  "placeholder_image": "Image URL",
+  "placeholder_tags": "Tags (comma-separated, letters and numbers only)",
+  "button_create": "Create Template",
+  "button_save": "Save Changes",
+  "title_required": "Title is required",
+  "questions_required": "Add at least one question",
+  "question_empty_error": "All questions must be filled",
+  "tags_invalid_all": "None of the tags passed validation",
+  "tags_invalid_some": "Invalid tags: {{tags}}"
+}

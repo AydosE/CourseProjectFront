@@ -1,5 +1,9 @@
+import { useTranslation } from "react-i18next";
+
 export default function AnswerCard({ index, question, answer }) {
-  const text = question?.text || answer.Question?.text || "❔ Вопрос удалён";
+  const { t } = useTranslation("AnswerCard");
+
+  const text = question?.text || answer.Question?.text || t("question_deleted");
 
   let value = answer.value;
   if (question?.type === "checkbox") {
@@ -15,7 +19,9 @@ export default function AnswerCard({ index, question, answer }) {
       <p className="font-semibold mb-1">
         {index + 1}. {text}
       </p>
-      <p className="text-sm text-muted-foreground">Ответ: {value || "—"}</p>
+      <p className="text-sm text-muted-foreground">
+        {t("answer_prefix")}: {value || t("answer_empty")}
+      </p>
     </div>
   );
 }

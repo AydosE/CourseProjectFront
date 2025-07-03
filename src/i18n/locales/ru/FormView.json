@@ -1,0 +1,17 @@
+{
+  "load_error": "Не удалось загрузить форму",
+  "confirm_delete": "Удалить этот ответ?",
+  "delete_success": "Ответ удалён",
+  "delete_error": "Не удалось удалить ответ",
+  "error_title": "Ошибка",
+  "error_message": "Ответ не найден или недоступен",
+
+  "template_removed_title": "Ответ без шаблона",
+  "template_section_title": "Ответ",
+  "template_deleted": "Шаблон был удалён",
+  "answers_section_title": "Ответы на вопросы",
+
+  "no_data_title": "Нет данных",
+  "no_data_message": "Ответов на вопросы не найдено",
+  "delete_button": "Удалить ответ"
+}

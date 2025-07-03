@@ -6,12 +6,14 @@ import { toast } from "sonner";
 import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";
 import SectionCard from "@/components/SelectionCard";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const [latest, setLatest] = useState([]);
   const [top, setTop] = useState([]);
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("Home");
 
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ export default function Home() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-10">
       {/* 📦 Новые шаблоны */}
-      <SectionCard title="📦 Новые шаблоны">
+      <SectionCard title={t("newTemplates.title")}>
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -50,8 +52,8 @@ export default function Home() {
         ) : latest.length === 0 ? (
           <EmptyState
             icon="📭"
-            title="Нет шаблонов"
-            message="Пока что здесь пусто. Попробуй позже!"
+            title={t("newTemplates.noTemplates")}
+            message={t("newTemplates.message")}
           />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -75,23 +77,26 @@ export default function Home() {
         )}
       </SectionCard>
 
-      {/* 🔥 Популярные */}
-      <SectionCard title="🔥 Топ-5 популярных">
+      <SectionCard title={t("popularTemplates.title")}>
         {loading ? (
           <SkeletonCard className="h-32" />
         ) : top.length === 0 ? (
           <EmptyState
             icon="📉"
-            title="Нет популярных шаблонов"
-            message="Никто пока не прошёл ни одного шаблона"
+            title={t("popularTemplates.noTemplates")}
+            message={t("popularTemplates.message")}
           />
         ) : (
           <table className="w-full border text-sm">
             <thead>
               <tr className="bg-muted text-muted-foreground">
                 <th className="text-left p-2">#</th>
-                <th className="text-left p-2">Шаблон</th>
-                <th className="text-left p-2">Прохождений</th>
+                <th className="text-left p-2">
+                  {t("popularTemplates.templates")}
+                </th>
+                <th className="text-left p-2">
+                  {t("popularTemplates.passedTimes")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -114,15 +119,14 @@ export default function Home() {
         )}
       </SectionCard>
 
-      {/* 🏷 Теги */}
-      <SectionCard title="🏷 Облако тегов">
+      <SectionCard title={t("tags.title")}>
         {loading ? (
           <SkeletonCard className="h-20" />
         ) : tags.length === 0 ? (
           <EmptyState
             icon="📪"
-            title="Нет тегов"
-            message="Пока шаблоны не размечены тегами"
+            title={t("tags.noTags")}
+            message={t("tags.message")}
           />
         ) : (
           <div className="flex flex-wrap gap-2">

@@ -1,0 +1,17 @@
+{
+  "load_error": "Failed to load form",
+  "confirm_delete": "Delete this response?",
+  "delete_success": "Response deleted",
+  "delete_error": "Failed to delete response",
+  "error_title": "Error",
+  "error_message": "Response not found or inaccessible",
+
+  "template_removed_title": "Response without template",
+  "template_section_title": "Response",
+  "template_deleted": "Template was deleted",
+  "answers_section_title": "Question answers",
+
+  "no_data_title": "No data",
+  "no_data_message": "No answers found",
+  "delete_button": "Delete response"
+}

@@ -1,0 +1,10 @@
+{
+  "load_error": "Failed to load template",
+  "not_found": "Template not found",
+  "template_corrupt": "Form is invalid or has no questions",
+  "no_answers": "You haven't answered any questions",
+  "submit_success": "Response submitted successfully",
+  "submit_error": "Submission failed. Please try again later.",
+  "submit_button": "Submit",
+  "submit_loading": "Submitting..."
+}

@@ -1,0 +1,14 @@
+{
+  "new_placeholder": "Текст вопроса",
+  "type_placeholder": "Тип",
+  "type_text": "Короткий текст",
+  "type_textarea": "Развёрнутый ответ",
+  "type_number": "Число",
+  "type_checkbox": "Флажки",
+  "options_placeholder": "Опции (через запятую)",
+  "add_button": "Добавить вопрос",
+  "delete_button": "Удалить",
+  "question_placeholder": "Вопрос",
+  "empty_error": "Введите текст вопроса",
+  "max_type_error": "Максимум {{max}} вопросов типа \"{{type}}\""
+}

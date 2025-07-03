@@ -1,0 +1,25 @@
+{
+  "title": "Profile",
+  "tab_templates": "Templates",
+  "tab_forms": "Responses",
+  "tab_settings": "Settings",
+
+  "forms_load_error": "Failed to load responses",
+  "forms_empty_title": "No responses",
+  "forms_empty_message": "You haven't filled any forms yet.",
+
+  "templates_load_error": "Failed to load templates",
+  "templates_empty_title": "No templates",
+  "templates_empty_message": "You haven't created any templates yet.",
+  "template_confirm_delete": "Delete template?",
+  "template_deleted": "Template deleted",
+  "template_delete_error": "Failed to delete template",
+
+  "label_theme": "Theme",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+  "theme_applied": "Theme: {{theme}}",
+
+  "label_language": "Language",
+  "language_changed": "Interface language: {{lang}}"
+}

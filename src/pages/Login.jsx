@@ -3,8 +3,11 @@ import AuthForm from "../components/AuthForm";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { t } = useTranslation("login");
+
   const navigate = useNavigate();
   const { fetchMe } = useAuth();
 
@@ -22,8 +25,8 @@ export default function Login() {
 
   return (
     <AuthForm
-      title="Вход в аккаунт"
-      buttonLabel="Войти"
+      title={t("title")}
+      buttonLabel={t("submit")}
       isLogin
       onSubmit={handleLogin}
     />

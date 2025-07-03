@@ -6,12 +6,14 @@ import TemplateForm from "../components/TemplateForm";
 import SectionCard from "@/components/SelectionCard";
 import FormPreview from "@/components/FormPreview";
 import { Skeleton } from "@/components/ui/skeletons/skeleton";
+import { useTranslation } from "react-i18next";
 
 export default function EditTemplate() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("EditTemplate");
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -21,20 +23,17 @@ export default function EditTemplate() {
         setTemplate({ ...rest, questions: Questions });
       } catch (err) {
         console.error("Ошибка при загрузке шаблона:", err);
-        toast.error("Не удалось загрузить шаблон");
+        toast.error(t("load_error"));
       } finally {
         setLoading(false);
       }
     };
     fetchTemplate();
-  }, [id]);
+  }, [id, t]);
 
   const handleSubmit = async (data) => {
     try {
-      await API.put(`/templates/${id}`, {
-        ...data,
-        tags: data.tags,
-      });
+      await API.put(`/templates/${id}`, { ...data, tags: data.tags });
 
       const enriched = data.questions.map((q, i) => ({
         ...q,
@@ -44,11 +43,11 @@ export default function EditTemplate() {
 
       await API.patch(`/templates/${id}/questions`, { questions: enriched });
 
-      toast.success("Шаблон обновлён");
+      toast.success(t("save_success"));
       navigate("/profile");
     } catch (err) {
       console.error("Ошибка при обновлении:", err);
-      toast.error("Не удалось сохранить изменения");
+      toast.error(t("save_error"));
     }
   };
 
@@ -63,7 +62,7 @@ export default function EditTemplate() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <SectionCard title="✏️ Редактирование шаблона">
+      <SectionCard title={t("title_edit")}>
         <TemplateForm
           mode="edit"
           initialData={template}
@@ -71,7 +70,7 @@ export default function EditTemplate() {
         />
       </SectionCard>
 
-      <SectionCard title="👁 Предпросмотр формы">
+      <SectionCard title={t("title_preview")}>
         <FormPreview
           template={{ ...template, Questions: template.questions }}
         />

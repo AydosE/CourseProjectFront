@@ -1,0 +1,9 @@
+{
+  "not_found": "User not found",
+  "loading": "Loading...",
+  "templates_section": "Templates",
+  "forms_section": "Responses",
+  "no_templates": "No templates",
+  "no_forms_title": "No responses",
+  "no_forms_message": "User hasn't submitted any responses yet."
+}

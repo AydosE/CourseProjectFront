@@ -3,10 +3,12 @@ import AuthForm from "../components/AuthForm";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export default function Register() {
   const navigate = useNavigate();
   const { fetchMe } = useAuth();
+  const { t } = useTranslation("Register");
 
   const handleRegister = async ({ username, email, password }) => {
     try {
@@ -19,14 +21,14 @@ export default function Register() {
       await fetchMe();
       navigate("/");
     } catch (err) {
-      toast.error("Пользователь уже существует или произошла ошибка");
+      toast.error(t("register_error"));
     }
   };
 
   return (
     <AuthForm
-      title="Регистрация"
-      buttonLabel="Создать аккаунт"
+      title={t("register_title")}
+      buttonLabel={t("register_button")}
       isLogin={false}
       onSubmit={handleRegister}
     />

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ export default function FormView() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation("FormView");
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -23,24 +25,24 @@ export default function FormView() {
         const res = await API.get(`/forms/${id}`);
         setForm(res.data);
       } catch (err) {
-        console.error("Ошибка при загрузке формы:", err);
-        toast.error("Не удалось загрузить форму");
+        console.error(err);
+        toast.error(t("load_error"));
       } finally {
         setLoading(false);
       }
     };
     fetchForm();
-  }, [id]);
+  }, [id, t]);
 
   const handleDelete = async () => {
-    if (!window.confirm("Удалить этот ответ?")) return;
+    if (!window.confirm(t("confirm_delete"))) return;
     try {
       await API.delete(`/forms/${form.id}`);
-      toast.success("Ответ удалён");
+      toast.success(t("delete_success"));
       navigate(user?.role === "admin" ? `/users/${form.userId}` : "/profile");
     } catch (err) {
-      console.error("Ошибка при удалении формы:", err);
-      toast.error("Не удалось удалить ответ");
+      console.error(err);
+      toast.error(t("delete_error"));
     }
   };
 
@@ -54,9 +56,7 @@ export default function FormView() {
   }
 
   if (!form) {
-    return (
-      <EmptyState title="Ошибка" message="Ответ не найден или недоступен" />
-    );
+    return <EmptyState title={t("error_title")} message={t("error_message")} />;
   }
 
   const isTemplateDeleted = form.Template === null;
@@ -65,10 +65,14 @@ export default function FormView() {
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <SectionCard
-        title={isTemplateDeleted ? "🗑 Ответ без шаблона" : "📄 Ответ"}
+        title={
+          isTemplateDeleted
+            ? t("template_removed_title")
+            : t("template_section_title")
+        }
       >
         <h2 className="text-xl font-bold">
-          {isTemplateDeleted ? "Шаблон был удалён" : form.Template.title}
+          {isTemplateDeleted ? t("template_deleted") : form.Template.title}
         </h2>
         {!isTemplateDeleted && form.Template.description && (
           <p className="text-muted-foreground mb-2">
@@ -77,7 +81,7 @@ export default function FormView() {
         )}
       </SectionCard>
 
-      <SectionCard title="📝 Ответы на вопросы">
+      <SectionCard title={t("answers_section_title")}>
         {hasAnswers ? (
           form.Answers.map((ans, i) => {
             const q = form.Template?.Questions?.find(
@@ -90,15 +94,15 @@ export default function FormView() {
         ) : (
           <EmptyState
             icon="📭"
-            title="Нет данных"
-            message="Ответов на вопросы не найдено"
+            title={t("no_data_title")}
+            message={t("no_data_message")}
           />
         )}
       </SectionCard>
 
       {(user?.id === form.userId || user?.role === "admin") && (
         <Button type="button" variant="destructive" onClick={handleDelete}>
-          🗑 Удалить ответ
+          🗑 {t("delete_button")}
         </Button>
       )}
     </div>

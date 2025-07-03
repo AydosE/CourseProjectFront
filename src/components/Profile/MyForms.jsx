@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/axios";
 import { toast } from "sonner";
-
 import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";
 import FormCard from "@/components/FormCard";
@@ -9,21 +9,16 @@ import FormCard from "@/components/FormCard";
 export default function MyForms() {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation("Profile");
 
   useEffect(() => {
-    const fetchForms = async () => {
-      try {
-        const res = await API.get("/users/me/forms");
-        setForms(res.data);
-      } catch (err) {
-        console.error("Ошибка при загрузке форм:", err);
-        toast.error("Не удалось загрузить ответы");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchForms();
+    API.get("/users/me/forms")
+      .then((res) => setForms(res.data))
+      .catch((err) => {
+        console.error(err);
+        toast.error(t("forms_load_error"));
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -40,8 +35,8 @@ export default function MyForms() {
     return (
       <EmptyState
         icon="📬"
-        title="Нет ответов"
-        message="Вы ещё не заполняли ни одной формы."
+        title={t("forms_empty_title")}
+        message={t("forms_empty_message")}
       />
     );
   }

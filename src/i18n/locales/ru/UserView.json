@@ -1,0 +1,9 @@
+{
+  "not_found": "Пользователь не найден",
+  "loading": "Загрузка...",
+  "templates_section": "Шаблоны",
+  "forms_section": "Ответы",
+  "no_templates": "Нет шаблонов",
+  "no_forms_title": "Нет форм",
+  "no_forms_message": "Пользователь ещё не отправлял ответы."
+}

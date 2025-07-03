@@ -1,0 +1,25 @@
+{
+  "title": "Профиль",
+  "tab_templates": "Шаблоны",
+  "tab_forms": "Ответы",
+  "tab_settings": "Настройки",
+
+  "forms_load_error": "Не удалось загрузить ответы",
+  "forms_empty_title": "Нет ответов",
+  "forms_empty_message": "Вы ещё не заполняли ни одной формы.",
+
+  "templates_load_error": "Не удалось загрузить шаблоны",
+  "templates_empty_title": "Нет шаблонов",
+  "templates_empty_message": "Вы ещё не создали ни одного шаблона.",
+  "template_confirm_delete": "Удалить шаблон?",
+  "template_deleted": "Шаблон удалён",
+  "template_delete_error": "Не удалось удалить шаблон",
+
+  "label_theme": "Тема",
+  "theme_light": "Светлая",
+  "theme_dark": "Тёмная",
+  "theme_applied": "Тема: {{theme}}",
+
+  "label_language": "Язык",
+  "language_changed": "Язык интерфейса: {{lang}}"
+}

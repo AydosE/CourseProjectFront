@@ -1,0 +1,19 @@
+{
+  "newTemplates": {
+    "title": "New Templates",
+    "noTemplates": "No Templates",
+    "message": "It's empty here for now. Check back later!"
+  },
+  "popularTemplates": {
+    "title": "Top 5 Popular",
+    "noPopularTemplates": "No Popular Templates",
+    "message": "No one has completed any templates yet",
+    "templates": "Templates",
+    "passedTimes": "Passed Times"
+  },
+  "tags": {
+    "title": "Tag Cloud",
+    "noTags": "No Popular Tags",
+    "message": "Templates are not tagged yet"
+  }
+}

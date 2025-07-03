@@ -1,14 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslation } from "react-i18next";
 
 export default function FormPreview({ template }) {
+  const { t } = useTranslation("FormPreview");
+
   if (!template || !template.Questions?.length) {
-    return (
-      <p className="text-muted-foreground italic">
-        Нет вопросов для предпросмотра
-      </p>
-    );
+    return <p className="text-muted-foreground italic">{t("no_questions")}</p>;
   }
 
   return (
@@ -19,16 +18,13 @@ export default function FormPreview({ template }) {
             {i + 1}. {q.text}
           </p>
 
-          {q.type === "text" && <Input placeholder="Короткий текст" disabled />}
-
+          {q.type === "text" && <Input placeholder={t("text")} disabled />}
           {q.type === "textarea" && (
-            <Textarea placeholder="Развёрнутый ответ" disabled />
+            <Textarea placeholder={t("textarea")} disabled />
           )}
-
           {q.type === "number" && (
-            <Input type="number" placeholder="Число" disabled />
+            <Input type="number" placeholder={t("number")} disabled />
           )}
-
           {q.type === "checkbox" && (
             <div className="space-y-1 pl-1">
               {q.options?.map((opt, idx) => (
