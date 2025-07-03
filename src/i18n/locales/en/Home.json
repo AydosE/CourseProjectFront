@@ -1,23 +1,23 @@
 {
-  "load_error": "Не удалось загрузить данные для главной страницы",
+  "load_error": "Failed to load homepage data",
 
   "newTemplates": {
-    "title": "Новые шаблоны",
-    "noTemplates": "Нет новых шаблонов",
-    "message": "Пока никто не опубликовал шаблон"
+    "title": "New Templates",
+    "noTemplates": "No new templates",
+    "message": "No templates have been published yet"
   },
 
   "popularTemplates": {
-    "title": "Популярные шаблоны",
-    "noTemplates": "Нет популярных шаблонов",
-    "message": "Пока ни один шаблон не заполнялся",
-    "templates": "Шаблон",
-    "passedTimes": "Ответов"
+    "title": "Popular Templates",
+    "noTemplates": "No popular templates",
+    "message": "No templates have been submitted yet",
+    "templates": "Template",
+    "passedTimes": "Submissions"
   },
 
   "tags": {
-    "title": "Популярные теги",
-    "noTags": "Нет тегов",
-    "message": "Теги пока не добавлены"
+    "title": "Popular Tags",
+    "noTags": "No tags",
+    "message": "No tags added yet"
   }
 }

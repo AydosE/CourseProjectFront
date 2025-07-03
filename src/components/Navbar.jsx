@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
-  const { t, i18n } = useTranslation("Navbar");
+  const { t } = useTranslation("Navbar");
   const navigate = useNavigate();
   const { user, logout, isAuth } = useAuth();
 
@@ -13,10 +14,10 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  const handleLangToggle = () => {
-    const next = i18n.language === "ru" ? "en" : "ru";
-    i18n.changeLanguage(next);
-  };
+  // const handleLangToggle = () => {
+  //   const next = i18n.language === "ru" ? "en" : "ru";
+  //   i18n.changeLanguage(next);
+  // };
 
   return (
     <nav className=" bg-blue-500 text-white p-4 flex flex-wrap justify-between items-center gap-4 sticky top-0">
@@ -94,12 +95,9 @@ export default function Navbar() {
             </>
           )}
 
-          <button
-            onClick={handleLangToggle}
-            className="bg-white text-blue-500 px-2 py-1 rounded"
-          >
-            {i18n.language.toUpperCase()}
-          </button>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </nav>
