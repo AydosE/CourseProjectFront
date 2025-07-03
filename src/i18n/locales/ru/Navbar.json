@@ -7,5 +7,7 @@
   "login": "Войти",
   "logout": "Выйти",
   "register": "Регистрация",
-  "createTemplate": "Создать шаблон"
+  "createTemplate": "Создать шаблон",
+  "light": "Светлая",
+  "dark": "Темная"
 }

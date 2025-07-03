@@ -7,5 +7,7 @@
   "login": "Login",
   "logout": "Logout",
   "register": "Register",
-  "createTemplate": "Create Template"
+  "createTemplate": "Create Template",
+  "light": "Light",
+  "dark": "Dark"
 }

@@ -76,7 +76,7 @@ export default function Navbar() {
             onClick={toggleTheme}
             className="px-2 py-1 border border-border dark:border-gray-700 rounded-md text-sm hover:bg-muted transition"
           >
-            {theme === "dark" ? "Light" : "Dark"}
+            {theme === "dark" ? t("light") : t("dark")}
           </button>
         </div>
       </div>
