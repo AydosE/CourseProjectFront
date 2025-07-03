@@ -1,19 +1,23 @@
 {
+  "load_error": "Не удалось загрузить данные для главной страницы",
+
   "newTemplates": {
-    "title": "New Templates",
-    "noTemplates": "No Templates",
-    "message": "It's empty here for now. Check back later!"
+    "title": "Новые шаблоны",
+    "noTemplates": "Нет новых шаблонов",
+    "message": "Пока никто не опубликовал шаблон"
   },
+
   "popularTemplates": {
-    "title": "Top 5 Popular",
-    "noPopularTemplates": "No Popular Templates",
-    "message": "No one has completed any templates yet",
-    "templates": "Templates",
-    "passedTimes": "Passed Times"
+    "title": "Популярные шаблоны",
+    "noTemplates": "Нет популярных шаблонов",
+    "message": "Пока ни один шаблон не заполнялся",
+    "templates": "Шаблон",
+    "passedTimes": "Ответов"
   },
+
   "tags": {
-    "title": "Tag Cloud",
-    "noTags": "No Popular Tags",
-    "message": "Templates are not tagged yet"
+    "title": "Популярные теги",
+    "noTags": "Нет тегов",
+    "message": "Теги пока не добавлены"
   }
 }

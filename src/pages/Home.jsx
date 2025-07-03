@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 import SkeletonCard from "@/components/ui/skeletons/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";
 import SectionCard from "@/components/SelectionCard";
-import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const [latest, setLatest] = useState([]);
@@ -14,7 +14,6 @@ export default function Home() {
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation("Home");
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,19 +28,18 @@ export default function Home() {
         setTop(topRes.data);
         setTags(tagsRes.data);
       } catch (err) {
-        console.error("Ошибка при загрузке:", err);
-        toast.error("Не удалось загрузить данные для главной страницы");
+        console.error("Home fetch error:", err);
+        toast.error(t("load_error"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchHomeData();
-  }, []);
+  }, [t]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-10">
-      {/* 📦 Новые шаблоны */}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-10">
       <SectionCard title={t("newTemplates.title")}>
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -61,9 +59,9 @@ export default function Home() {
               <Link
                 key={tpl.id}
                 to={`/templates/${tpl.id}`}
-                className="border rounded p-4 hover:shadow transition bg-background"
+                className="border rounded-lg p-4 bg-background transition hover:shadow"
               >
-                <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                <h3 className="font-semibold text-lg mb-1 text-foreground line-clamp-1">
                   {tpl.title}
                 </h3>
                 {tpl.description && (
@@ -87,35 +85,41 @@ export default function Home() {
             message={t("popularTemplates.message")}
           />
         ) : (
-          <table className="w-full border text-sm">
-            <thead>
-              <tr className="bg-muted text-muted-foreground">
-                <th className="text-left p-2">#</th>
-                <th className="text-left p-2">
-                  {t("popularTemplates.templates")}
-                </th>
-                <th className="text-left p-2">
-                  {t("popularTemplates.passedTimes")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {top.map((tpl, i) => (
-                <tr key={tpl.id} className="border-t">
-                  <td className="p-2">{i + 1}</td>
-                  <td className="p-2">
-                    <Link
-                      to={`/templates/${tpl.id}`}
-                      className="text-primary hover:underline"
-                    >
-                      {tpl.title}
-                    </Link>
-                  </td>
-                  <td className="p-2">{tpl.formCount}</td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm border rounded shadow bg-background">
+              <thead>
+                <tr className="bg-muted text-muted-foreground">
+                  <th className="text-left px-3 py-2">#</th>
+                  <th className="text-left px-3 py-2">
+                    {t("popularTemplates.templates")}
+                  </th>
+                  <th className="text-left px-3 py-2">
+                    {t("popularTemplates.passedTimes")}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {top.map((tpl, i) => (
+                  <tr
+                    key={tpl.id}
+                    className="border-t hover:cursor-pointer hover:bg-muted/50 transition"
+                    onClick={() => navigate(`/templates/${tpl.id}`)}
+                  >
+                    <td className="px-3 py-2">{i + 1}</td>
+                    <td className="px-3 py-2">
+                      {/* <Link
+                        to={`/templates/${tpl.id}`}
+                        className="text-primary hover:underline"
+                      > */}
+                      {tpl.title}
+                      {/* </Link> */}
+                    </td>
+                    <td className="px-3 py-2">{tpl.formCount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </SectionCard>
 
@@ -133,7 +137,7 @@ export default function Home() {
             {tags.map((tag) => (
               <button
                 key={tag}
-                className="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded hover:bg-blue-200 transition"
+                className="px-3 py-1 text-sm bg-muted hover:bg-muted/70 text-foreground rounded transition cursor-pointer"
                 onClick={() =>
                   navigate(`/templates?tag=${encodeURIComponent(tag)}`)
                 }
