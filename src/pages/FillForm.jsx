@@ -91,7 +91,7 @@ export default function FillForm() {
       <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
         {template.title}
       </h1>
-
+      <img src={template.imageUrl} alt="" />
       <form onSubmit={handleSubmit} className="space-y-6">
         {template.Questions.map((q) => (
           <div key={q.id} className="space-y-2">

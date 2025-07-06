@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { supabaseImg } from "@/api/supabaseImg";
 
 export default function TemplateForm({
   mode = "create",
@@ -21,8 +22,9 @@ export default function TemplateForm({
     tags: "",
     ...initialData,
   });
-
+  const [selectedFile, setSelectedFile] = useState(null);
   const [questions, setQuestions] = useState(initialData.questions || []);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(initialData.tags)) {
@@ -60,7 +62,14 @@ export default function TemplateForm({
     return validTags;
   };
 
-  const handleSubmit = (e) => {
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.title.trim()) {
@@ -81,8 +90,33 @@ export default function TemplateForm({
     const tags = normalizeTags(form.tags);
     if (form.tags && tags.length === 0) return;
 
+    let imageUrl = form.imageUrl;
+    if (selectedFile) {
+      const fileName = `${Date.now()}-${selectedFile.name}`;
+      const { data, error } = await supabaseImg.storage
+        .from("template-image")
+        .upload(fileName, selectedFile);
+
+      if (error) {
+        toast.error("Ошибка загрузки изображения");
+        return;
+      }
+
+      const { data: publicUrl } = supabaseImg.storage
+        .from("template-image")
+        .getPublicUrl(fileName);
+
+      imageUrl = publicUrl.publicUrl;
+
+      setForm((prev) => ({
+        ...prev,
+        imageUrl,
+      }));
+    }
+
     const payload = {
       ...form,
+      imageUrl,
       tags,
       questions,
     };
@@ -97,11 +131,11 @@ export default function TemplateForm({
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Блок с общей информацией */}
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground dark:text-white">
             {t("section_info")}
           </h2>
+
           <Input
             name="title"
             value={form.title}
@@ -109,24 +143,43 @@ export default function TemplateForm({
             placeholder={t("placeholder_title")}
             required
           />
+
           <Textarea
             name="description"
             value={form.description}
             onChange={handleChange}
             placeholder={t("placeholder_description")}
           />
+
           <Input
             name="category"
             value={form.category}
             onChange={handleChange}
             placeholder={t("placeholder_category")}
           />
-          <Input
-            name="imageUrl"
-            value={form.imageUrl}
-            onChange={handleChange}
-            placeholder={t("placeholder_image")}
-          />
+
+          <div className="space-y-2">
+            <label className="block font-medium text-foreground dark:text-white">
+              {t("image_label")}
+            </label>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              placeholder="asdasd"
+            />
+            {uploading && (
+              <p className="text-sm text-muted-foreground">Загрузка...</p>
+            )}
+            {form.imageUrl && (
+              <img
+                src={form.imageUrl}
+                alt="Превью шаблона"
+                className="w-full max-w-xs h-auto rounded-md border border-muted"
+              />
+            )}
+          </div>
+
           <Input
             name="tags"
             value={form.tags}
@@ -137,7 +190,6 @@ export default function TemplateForm({
 
         <hr className="border-muted dark:border-gray-700" />
 
-        {/* Блок с вопросами */}
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground dark:text-white">
             {t("section_questions")}
@@ -145,7 +197,6 @@ export default function TemplateForm({
           <QuestionBuilder questions={questions} setQuestions={setQuestions} />
         </section>
 
-        {/* Кнопка отправки */}
         <div className="pt-4">
           <Button type="submit">
             {mode === "edit" ? t("button_save") : t("button_create")}

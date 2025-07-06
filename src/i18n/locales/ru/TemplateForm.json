@@ -14,5 +14,6 @@
   "questions_required": "Добавьте хотя бы один вопрос",
   "question_empty_error": "Все вопросы должны быть заполнены",
   "tags_invalid_all": "Ни один тег не прошёл проверку",
-  "tags_invalid_some": "Некорректные теги: {{tags}}"
+  "tags_invalid_some": "Некорректные теги: {{tags}}",
+  "image_label": "Изображение"
 }

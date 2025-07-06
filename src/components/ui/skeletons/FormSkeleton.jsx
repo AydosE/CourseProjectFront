@@ -1,3 +1,5 @@
+import { Skeleton } from "./skeleton";
+
 export default function FormSkeleton() {
   return (
     <div className="max-w-2xl mx-auto p-6 sm:p-8 bg-white dark:bg-neutral-900 rounded-lg shadow space-y-6 animate-pulse">
