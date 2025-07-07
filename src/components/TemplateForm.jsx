@@ -20,6 +20,7 @@ export default function TemplateForm({
     category: "",
     imageUrl: "",
     tags: "",
+    version: "",
     ...initialData,
   });
   const [selectedFile, setSelectedFile] = useState(null);

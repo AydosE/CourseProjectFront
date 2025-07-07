@@ -63,6 +63,7 @@ export default function FillForm() {
 
     const payload = {
       templateId: template.id,
+      templateVersion: template.version,
       answers: answerList,
     };
 
@@ -73,6 +74,11 @@ export default function FillForm() {
       navigate(`/forms/${res.data.formId}`);
     } catch (err) {
       console.error("Ошибка при отправке формы:", err);
+      if (err.response?.status === 409) {
+        toast.error(t("version_conflict"));
+        return;
+      }
+
       const message = err.response?.data?.message || t("submit_error");
       toast.error(message);
     } finally {

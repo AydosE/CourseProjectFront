@@ -33,7 +33,17 @@ export default function EditTemplate() {
 
   const handleSubmit = async (data) => {
     try {
-      await API.put(`/templates/${id}`, { ...data, tags: data.tags });
+      const response = await API.put(`/templates/${id}`, {
+        ...data,
+        tags: data.tags,
+        version: data.version,
+      });
+      if (response.data?.version) {
+        setTemplate((prev) => ({
+          ...prev,
+          version: response.data.version,
+        }));
+      }
 
       const enriched = data.questions.map((q, i) => ({
         ...q,
@@ -47,6 +57,10 @@ export default function EditTemplate() {
       navigate("/profile");
     } catch (err) {
       console.error("Ошибка при обновлении:", err);
+      if (err.response?.status === 409) {
+        toast.error(t("version_conflict"));
+        return;
+      }
       toast.error(t("save_error"));
     }
   };

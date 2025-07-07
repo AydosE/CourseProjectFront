@@ -6,5 +6,6 @@
   "submit_success": "Response submitted successfully",
   "submit_error": "Submission failed. Please try again later.",
   "submit_button": "Submit",
-  "submit_loading": "Submitting..."
+  "submit_loading": "Submitting...",
+  "version_conflict": "The template has been updated. Please start over."
 }
