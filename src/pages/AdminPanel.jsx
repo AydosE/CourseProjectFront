@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import AdminTemplatesPanel from "@/components/AdminTemplatesPanel";
+import { debounce } from "lodash";
 
 export default function AdminPanel() {
   const [users, setUsers] = useState([]);
@@ -18,18 +19,14 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const { t } = useTranslation("Admin");
 
-  useEffect(() => {
-    fetchUsers();
-  }, [search, sortBy, order, page]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = async (searchValue = search) => {
     setLoading(true);
     try {
       const res = await API.get("/admin/users", {
         params: {
           page,
           limit: 10,
-          search,
+          search: searchValue,
           sortBy,
           order,
         },
@@ -42,6 +39,23 @@ export default function AdminPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // 🔁 Debounced версия fetchUsers
+  const debouncedFetch = useCallback(
+    debounce((value) => {
+      fetchUsers(value);
+    }, 400),
+    [sortBy, order, page]
+  );
+
+  useEffect(() => {
+    debouncedFetch(search);
+  }, [search, sortBy, order, page]);
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setPage(1);
   };
 
   const toggleBlock = async (id, e) => {
@@ -89,10 +103,7 @@ export default function AdminPanel() {
         <Input
           placeholder={t("search_placeholder")}
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          onChange={handleSearchChange}
           aria-label="Search users"
         />
         <select
