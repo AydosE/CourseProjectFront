@@ -14,6 +14,19 @@ export default function TemplateView() {
   const navigate = useNavigate();
   const { t } = useTranslation("TemplateView");
 
+  const handleCopyLink = () => {
+    const link = `${window.location.origin}/templates/${id}`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success(t("link_copied"));
+      })
+      .catch((err) => {
+        console.error("Ошибка копирования ссылки:", err);
+        toast.error(t("copy_error"));
+      });
+  };
+
   const handleDeleteTemplate = async () => {
     const confirmed = window.confirm(t("confirm_delete"));
     if (!confirmed) return;
@@ -79,25 +92,37 @@ export default function TemplateView() {
       </ul>
 
       {isAuth && (
-        <div className="space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-2 text-sm">
           <Link
             to={`/templates/${template.id}/fill`}
-            className="inline-block text-blue-600 hover:underline"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             {t("fill_button")}
           </Link>
+
+          <button
+            onClick={() => {
+              const link = `${window.location.origin}/templates/${template.id}`;
+              navigator.clipboard.writeText(link);
+              toast.success(t("copy_success"));
+            }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition dark:bg-neutral-700 dark:text-white dark:hover:bg-neutral-600"
+          >
+            {t("copy_link")}
+          </button>
 
           {(user?.id === template.userId || user?.role === "admin") && (
             <>
               <button
                 onClick={handleDeleteTemplate}
-                className="block text-red-600 hover:underline text-sm"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-red-600 text-white hover:bg-red-700 transition dark:bg-red-500 dark:hover:bg-red-600"
               >
                 {t("delete_button")}
               </button>
+
               <Link
                 to={`/edit-template/${template.id}`}
-                className="block text-green-600 hover:underline text-sm"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-green-600 text-white hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-600"
               >
                 {t("edit_button")}
               </Link>

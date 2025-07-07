@@ -6,5 +6,8 @@
   "not_found": "Template not found",
   "fill_button": "Fill out template",
   "delete_button": "Delete template",
-  "edit_button": "Edit template"
+  "edit_button": "Edit template",
+  "copy_link": "Copy link",
+  "link_copied": "Link copied to clipboard",
+  "copy_success": "Link copied successfully"
 }

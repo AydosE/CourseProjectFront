@@ -15,5 +15,6 @@
   "question_empty_error": "Все вопросы должны быть заполнены",
   "tags_invalid_all": "Ни один тег не прошёл проверку",
   "tags_invalid_some": "Некорректные теги: {{tags}}",
-  "image_label": "Изображение"
+  "image_label": "Изображение",
+  "is_public_label": "Сделать шаблон публичным"
 }

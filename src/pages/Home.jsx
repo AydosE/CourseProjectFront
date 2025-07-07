@@ -20,11 +20,13 @@ export default function Home() {
     const fetchHomeData = async () => {
       try {
         const [latestRes, topRes, tagsRes] = await Promise.all([
-          API.get("/templates?limit=6"),
+          API.get("/templates", {
+            params: { sortBy: "createdAt", order: "desc", limit: 6 },
+          }),
           API.get("/templates/top"),
           API.get("/tags"),
         ]);
-        setLatest(latestRes.data);
+        setLatest(latestRes.data.templates);
         setTop(topRes.data);
         setTags(tagsRes.data);
       } catch (err) {

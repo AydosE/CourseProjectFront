@@ -120,6 +120,7 @@ export default function TemplateForm({
       imageUrl,
       tags,
       questions,
+      isPublic: form.isPublic ?? false,
     };
 
     onSubmit(payload);
@@ -187,6 +188,16 @@ export default function TemplateForm({
             onChange={handleChange}
             placeholder={t("placeholder_tags")}
           />
+          <label className="flex items-center gap-2 text-foreground dark:text-white">
+            <input
+              type="checkbox"
+              checked={form.isPublic}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, isPublic: e.target.checked }))
+              }
+            />
+            {t("is_public_label") || "Сделать шаблон публичным"}
+          </label>
         </section>
 
         <hr className="border-muted dark:border-gray-700" />

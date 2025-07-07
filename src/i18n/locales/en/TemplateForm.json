@@ -15,5 +15,6 @@
   "question_empty_error": "All questions must be filled",
   "tags_invalid_all": "None of the tags passed validation",
   "tags_invalid_some": "Invalid tags: {{tags}}",
-  "image_label": "Image"
+  "image_label": "Image",
+  "is_public_label": "Make template public"
 }

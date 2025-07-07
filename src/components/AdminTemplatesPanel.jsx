@@ -9,29 +9,37 @@ export default function AdminTemplatesPanel() {
   const [templates, setTemplates] = useState([]);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
+  const [order, setOrder] = useState("DESC");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation("Admin");
 
   useEffect(() => {
     const fetchTemplates = async () => {
+      setLoading(true);
       try {
-        const res = await API.get("/templates");
-        setTemplates(res.data);
+        const res = await API.get("/templates", {
+          params: {
+            adminView: true,
+            page,
+            limit: 9,
+            search,
+            sortBy,
+            order,
+          },
+        });
+        setTemplates(res.data.templates);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         toast.error(t("template_fetch_error"));
       } finally {
         setLoading(false);
       }
     };
-    fetchTemplates();
-  }, []);
 
-  const filtered = templates
-    .filter((tpl) => tpl.title.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => {
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    fetchTemplates();
+  }, [page, search, sortBy, order]);
 
   return (
     <section className="space-y-5 px-4 sm:px-6 lg:px-8">
@@ -43,7 +51,10 @@ export default function AdminTemplatesPanel() {
         <Input
           placeholder={t("template_search")}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1); // сброс страницы при новом поиске
+          }}
           aria-label="Search templates"
         />
         <select
@@ -61,16 +72,38 @@ export default function AdminTemplatesPanel() {
         <p className="text-center text-muted-foreground dark:text-gray-400 mt-6">
           {t("loading")}
         </p>
-      ) : filtered.length === 0 ? (
+      ) : templates.length === 0 ? (
         <p className="text-center text-muted-foreground dark:text-gray-400 mt-6">
           {t("template_empty")}
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((tpl) => (
-            <TemplateCard key={tpl.id} template={tpl} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {templates.map((tpl) => (
+              <TemplateCard key={tpl.id} template={tpl} />
+            ))}
+          </div>
+
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+              className="px-3 py-1 rounded bg-muted hover:bg-muted/80 disabled:opacity-50"
+            >
+              ← {t("prev")}
+            </button>
+            <span className="text-sm text-muted-foreground">
+              {t("page")} {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+              disabled={page === totalPages}
+              className="px-3 py-1 rounded bg-muted hover:bg-muted/80 disabled:opacity-50"
+            >
+              {t("next")} →
+            </button>
+          </div>
+        </>
       )}
     </section>
   );
