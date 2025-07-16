@@ -3,6 +3,7 @@ import SupportModal from "@/components/SupportModal";
 import { Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 import API from "@/api/axios";
+import { toast } from "sonner";
 
 const Layout = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -11,19 +12,18 @@ const Layout = () => {
   const handleSubmit = async ({ summary, priority }) => {
     const ticket = {
       reported_by: "aidos@example.com", // подставь динамически
-      template: "Integration Viewer", // или получай из контекста
+      template: "Integration Viewer",
       link: window.location.href,
       priority,
       admins: ["admin1@example.com", "admin2@example.com"],
       summary,
     };
 
-    try {
-      await API.post("/tickets/upload", ticket);
-      console.log("Тикет успешно отправлен");
-    } catch (err) {
-      console.error("Ошибка загрузки тикета:", err);
-    }
+    toast.promise(API.post("/tickets/upload", ticket), {
+      loading: "Отправка тикета…",
+      success: "Тикет успешно отправлен",
+      error: "Ошибка при отправке тикета  ",
+    });
   };
 
   return (
