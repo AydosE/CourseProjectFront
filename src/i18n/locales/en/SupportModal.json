@@ -1,0 +1,17 @@
+{
+  "supportModal": {
+    "title": "Create Support Ticket",
+    "summary": "Description",
+    "summaryPlaceholder": "Briefly describe the issue...",
+    "priority": "Priority",
+    "submit": "Submit Ticket"
+  },
+  "priority": {
+    "high": "High",
+    "average": "Average",
+    "low": "Low"
+  },
+  "common": {
+    "cancel": "Cancel"
+  }
+}
